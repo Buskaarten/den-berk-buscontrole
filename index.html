@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>Den Berk Delice - Buscontrole</title>
+
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f4f4;
+      color: #222;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      color: #b5121b;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 15px;
+      margin-bottom: 7px;
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      min-height: 52px;
+      border-radius: 10px;
+      font-size: 18px;
+    }
+
+    input,
+    select {
+      border: 1px solid #bbb;
+      padding: 10px;
+      background: white;
+    }
+
+    button {
+      border: none;
+      background: #b5121b;
+      color: white;
+      font-weight: bold;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background: #aaa;
+    }
+
+    .logout {
+      background: #555;
+      margin-top: 10px;
+    }
+
+    #scannerPage {
+      display: none;
+    }
+
+    #loginPage {
+      display: block;
+    }
+
+    #reader {
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .busInfo {
+      background: #eee;
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .status {
+      margin-top: 15px;
+      padding: 20px;
+      border-radius: 14px;
+      text-align: center;
+      font-weight: bold;
+      display: none;
+    }
+
+    .green {
+      background: #16a34a;
+      color: white;
+    }
+
+    .red {
+      background: #dc2626;
+      color: white;
+    }
+
+    .statusBig {
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
+
+    .name {
+      font-size: 25px;
+      margin-top: 10px;
+    }
+
+    .reason {
+      font-size: 17px;
+      margin-top: 8px;
+    }
+
+    .small {
+      font-size: 13px;
+      color: #666;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 15px;
+      display: none;
+    }
+
+    .error {
+      color: #b5121b;
+      font-weight: bold;
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .cameraHelp {
+      background: #fff7d6;
+      border: 1px solid #e4c75a;
+      padding: 12px;
+      border-radius: 10px;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- LOGIN -->
+  <div id="loginPage">
+
+    <div class="logo">DEN BERK DELICE</div>
+    <div class="subtitle">Digitale buscontrole</div>
+
+    <div class="card">
+
+      <h2>Chauffeur aanmelden</h2>
+
+      <label for="code">Chauffeurscode</label>
+      <input
+        type="password"
+        id="code"
+        inputmode="numeric"
+        placeholder="Code"
+        autocomplete="off"
+      >
+
+      <label for="bus">Kies bus</label>
+
+      <select id="bus">
+        <option value="">-- Kies bus --</option>
+        <option value="BUS-A">BUS-A</option>
+        <option value="BUS-B">BUS-B</option>
+        <option value="BUS-C">BUS-C</option>
+      </select>
+
+      <button id="loginButton" onclick="login()">
+        INLOGGEN
+      </button>
+
+      <div id="loginError" class="error"></div>
+
+      <div class="small">
+        Den Berk Delice – digitale buscontrole
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- SCANNER -->
+  <div id="scannerPage">
+
+    <div class="logo">DEN BERK DELICE</div>
+    <div class="subtitle">Buscontrole</div>
+
+    <div class="busInfo">
+      Bus: <span id="busNaam"></span>
+    </div>
+
+    <div class="card">
+
+      <h2 style="text-align:center;">
+        Scan badge
+      </h2>
+
+      <div id="reader"></div>
+
+      <div class="cameraHelp">
+        📷 Richt de camera op de QR-code van de medewerker.
+        De controle gebeurt automatisch.
+      </div>
+
+      <div id="loading" class="loading">
+        Controleren...
+      </div>
+
+      <div id="status" class="status">
+
+        <div id="statusBig" class="statusBig"></div>
+
+        <div id="statusName" class="name"></div>
+
+        <div id="statusReason" class="reason"></div>
+
+      </div>
+
+      <button class="logout" onclick="logout()">
+        UITLOGGEN
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  /*
+   * GOOGLE APPS SCRIPT API
+   */
+  const API_URL =
+    "https://script.google.com/macros/s/AKfycbyilW3j28SCm-7mch8tgdDkp9RzQsi_J-RsUD3ziFP26LVlJuE06fEbiCpPBVqUQntD4w/exec";
+
+
+  let chauffeurToken = "";
+  let gekozenBus = "";
+  let scanner = null;
+  let scannerRunning = false;
+  let scanBusy = false;
+
+
+  /*
+   * JSONP API AANROEP
+   */
+  function apiCall(params) {
+
+    return new Promise((resolve, reject) => {
+
+      const callbackName =
+        "callback_" + Date.now() + "_" +
+        Math.floor(Math.random() * 100000);
+
+      const script = document.createElement("script");
+
+      const query = new URLSearchParams(params);
+
+      query.set("callback", callbackName);
+
+      script.src = API_URL + "?" + query.toString();
+
+      window[callbackName] = function(data) {
+
+        try {
+          resolve(data);
+        } finally {
+
+          delete window[callbackName];
+
+          if (script.parentNode) {
+            script.parentNode.removeChild(script);
+          }
+
+        }
+
+      };
+
+      script.onerror = function() {
+
+        delete window[callbackName];
+
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
+
+        reject(new Error("Kan server niet bereiken."));
+      };
+
+      document.body.appendChild(script);
+
+      setTimeout(() => {
+
+        if (window[callbackName]) {
+
+          delete window[callbackName];
+
+          if (script.parentNode) {
+            script.parentNode.removeChild(script);
+          }
+
+          reject(new Error("Server reageert niet."));
+        }
+
+      }, 15000);
+
+    });
+
+  }
+
+
+  /*
+   * CHAUFFEUR INLOGGEN
+   */
+  async function login() {
+
+    const code =
+      document.getElementById("code").value.trim();
+
+    const bus =
+      document.getElementById("bus").value;
+
+    const error =
+      document.getElementById("loginError");
+
+    error.textContent = "";
+
+    if (!code) {
+      error.textContent = "Vul de chauffeurscode in.";
+      return;
+    }
+
+    if (!bus) {
+      error.textContent = "Kies eerst een bus.";
+      return;
+    }
+
+    const button =
+      document.getElementById("loginButton");
+
+    button.disabled = true;
+    button.textContent = "INLOGGEN...";
+
+
+    try {
+
+      const result = await apiCall({
+        api: "1",
+        action: "login",
+        code: code
+      });
+
+
+      if (!result.toegestaan) {
+
+        error.textContent =
+          result.melding || "Inloggen mislukt.";
+
+        return;
+      }
+
+
+      chauffeurToken = result.token;
+      gekozenBus = bus;
+
+      localStorage.setItem(
+        "chauffeurToken",
+        chauffeurToken
+      );
+
+      localStorage.setItem(
+        "gekozenBus",
+        gekozenBus
+      );
+
+
+      document.getElementById("busNaam").textContent =
+        gekozenBus;
+
+      document.getElementById("loginPage").style.display =
+        "none";
+
+      document.getElementById("scannerPage").style.display =
+        "block";
+
+
+      startScanner();
+
+    }
+
+    catch (e) {
+
+      error.textContent =
+        "Verbinding met de buscontrole mislukt.";
+
+      console.error(e);
+
+    }
+
+    finally {
+
+      button.disabled = false;
+      button.textContent = "INLOGGEN";
+
+    }
+
+  }
+
+
+  /*
+   * CAMERA STARTEN
+   */
+  async function startScanner() {
+
+    if (scannerRunning) {
+      return;
+    }
+
+    try {
+
+      scanner = new Html5Qrcode("reader");
+
+      const config = {
+        fps: 10,
+        qrbox: {
+          width: 280,
+          height: 280
+        }
+      };
+
+
+      await scanner.start(
+
+        {
+          facingMode: "environment"
+        },
+
+        config,
+
+        onScanSuccess,
+
+        onScanFailure
+
+      );
+
+
+      scannerRunning = true;
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+      document.getElementById("reader").innerHTML =
+        "<div class='error'>" +
+        "🔴 CAMERA KAN NIET STARTEN<br><br>" +
+        "Geef Safari/Chrome toestemming voor de camera " +
+        "en probeer opnieuw." +
+        "</div>";
+
+    }
+
+  }
+
+
+  /*
+   * QR-CODE GELEZEN
+   */
+  async function onScanSuccess(decodedText) {
+
+    if (scanBusy) {
+      return;
+    }
+
+    scanBusy = true;
+
+    const badgeId =
+      String(decodedText).trim();
+
+
+    document.getElementById("loading").style.display =
+      "block";
+
+
+    try {
+
+      const result = await apiCall({
+
+        api: "1",
+
+        action: "scan",
+
+        badge: badgeId,
+
+        bus: gekozenBus,
+
+        token: chauffeurToken
+
+      });
+
+
+      toonResultaat(result);
+
+
+      /*
+       * Wacht even zodat chauffeur
+       * het groene/rode resultaat kan zien.
+       */
+      await sleep(1800);
+
+      verbergResultaat();
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+      toonFout(
+        "VERBINDINGSPROBLEEM",
+        "Controle kon niet worden uitgevoerd."
+      );
+
+      await sleep(1800);
+
+      verbergResultaat();
+
+    }
+
+    finally {
+
+      document.getElementById("loading").style.display =
+        "none";
+
+      scanBusy = false;
+
+    }
+
+  }
+
+
+  /*
+   * QR-SCANS DIE GEEN GELDIGE QR ZIJN
+   * worden genegeerd.
+   */
+  function onScanFailure(errorMessage) {
+    // Geen actie nodig.
+  }
+
+
+  /*
+   * RESULTAAT TONEN
+   */
+  function toonResultaat(result) {
+
+    const status =
+      document.getElementById("status");
+
+    const big =
+      document.getElementById("statusBig");
+
+    const name =
+      document.getElementById("statusName");
+
+    const reason =
+      document.getElementById("statusReason");
+
+
+    status.style.display = "block";
+
+    status.classList.remove(
+      "green",
+      "red"
+    );
+
+
+    if (result.toegestaan) {
+
+      status.classList.add("green");
+
+      big.textContent = "🟢 TOEGELATEN";
+
+      name.textContent =
+        result.naam || "";
+
+      reason.textContent =
+        "Bus: " +
+        (result.bus || gekozenBus);
+
+    }
+
+    else {
+
+      status.classList.add("red");
+
+      big.textContent = "🔴 NIET TOEGELATEN";
+
+      name.textContent =
+        result.naam || "";
+
+      reason.textContent =
+        result.reden ||
+        "Geen toegang";
+
+    }
+
+  }
+
+
+  /*
+   * FOUT TONEN
+   */
+  function toonFout(titel, tekst) {
+
+    const status =
+      document.getElementById("status");
+
+    status.style.display = "block";
+
+    status.classList.remove("green");
+
+    status.classList.add("red");
+
+
+    document.getElementById("statusBig").textContent =
+      "🔴 " + titel;
+
+    document.getElementById("statusName").textContent =
+      "";
+
+    document.getElementById("statusReason").textContent =
+      tekst;
+
+  }
+
+
+  /*
+   * RESULTAAT VERBERGEN
+   */
+  function verbergResultaat() {
+
+    document.getElementById("status").style.display =
+      "none";
+
+  }
+
+
+  /*
+   * UITLOGGEN
+   */
+  async function logout() {
+
+    try {
+
+      if (scanner && scannerRunning) {
+
+        await scanner.stop();
+
+        scanner.clear();
+
+      }
+
+    }
+
+    catch (e) {
+
+      console.log(e);
+
+    }
+
+
+    scannerRunning = false;
+    scanner = null;
+
+    chauffeurToken = "";
+    gekozenBus = "";
+
+    localStorage.removeItem("chauffeurToken");
+    localStorage.removeItem("gekozenBus");
+
+
+    document.getElementById("scannerPage").style.display =
+      "none";
+
+    document.getElementById("loginPage").style.display =
+      "block";
+
+    document.getElementById("code").value = "";
+
+    document.getElementById("bus").value = "";
+
+  }
+
+
+  /*
+   * BIJ OPENEN:
+   * vorige chauffeurssessie eventueel terugzetten.
+   */
+  window.addEventListener("load", function() {
+
+    const savedToken =
+      localStorage.getItem("chauffeurToken");
+
+    const savedBus =
+      localStorage.getItem("gekozenBus");
+
+
+    /*
+     * Voor de eerste test starten we NIET
+     * automatisch met de camera.
+     *
+     * De chauffeur logt eerst opnieuw in.
+     */
+    if (savedToken && savedBus) {
+
+      localStorage.removeItem("chauffeurToken");
+      localStorage.removeItem("gekozenBus");
+
+    }
+
+  });
+
+
+  function sleep(ms) {
+
+    return new Promise(
+      resolve => setTimeout(resolve, ms)
+    );
+
+  }
+
+</script>
+
+</body>
+</html>
