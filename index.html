@@ -105,25 +105,10 @@
     }
 
     /*
-     * INSTRUCTIETEKST BOVEN CAMERA
+     * ==========================================
+     * BUS INFO
+     * ==========================================
      */
-
-    .cameraHelp {
-      background: #fff7d6;
-      border: 1px solid #e4c75a;
-      padding: 14px;
-      border-radius: 10px;
-      margin-bottom: 12px;
-      font-size: 15px;
-      line-height: 1.4;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    #reader {
-      width: 100%;
-      margin-top: 0;
-    }
 
     .busInfo {
       background: #eee;
@@ -135,13 +120,23 @@
       margin-bottom: 10px;
     }
 
+
+    /*
+     * ==========================================
+     * RESULTAAT
+     * Staat bewust BOVEN de camera
+     * ==========================================
+     */
+
     .status {
-      margin-top: 15px;
-      padding: 20px;
+      margin-top: 10px;
+      margin-bottom: 12px;
+      padding: 18px 12px;
       border-radius: 14px;
       text-align: center;
       font-weight: bold;
       display: none;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
     }
 
     .green {
@@ -156,33 +151,74 @@
 
     .statusBig {
       font-size: 34px;
-      margin-bottom: 10px;
+      font-weight: 900;
+      margin-bottom: 6px;
+      line-height: 1.1;
     }
 
     .name {
-      font-size: 25px;
-      margin-top: 10px;
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 6px;
     }
 
     .reason {
       font-size: 17px;
-      margin-top: 8px;
+      margin-top: 6px;
     }
 
-    .small {
-      font-size: 13px;
-      color: #666;
+
+    /*
+     * ==========================================
+     * INSTRUCTIETEKST
+     * ==========================================
+     */
+
+    .cameraHelp {
+      background: #fff7d6;
+      border: 1px solid #e4c75a;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-size: 15px;
+      line-height: 1.4;
       text-align: center;
-      margin-top: 15px;
+      font-weight: bold;
     }
+
+
+    /*
+     * ==========================================
+     * CAMERA
+     * ==========================================
+     */
+
+    #reader {
+      width: 100%;
+      margin-top: 0;
+    }
+
+
+    /*
+     * ==========================================
+     * CONTROLE BEZIG
+     * ==========================================
+     */
 
     .loading {
       text-align: center;
-      padding: 15px;
+      padding: 10px;
       display: none;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: bold;
     }
+
+
+    /*
+     * ==========================================
+     * FOUTMELDING
+     * ==========================================
+     */
 
     .error {
       color: #b5121b;
@@ -191,16 +227,32 @@
       text-align: center;
     }
 
+
+    /*
+     * ==========================================
+     * KLEINERE TEKST
+     * ==========================================
+     */
+
+    .small {
+      font-size: 13px;
+      color: #666;
+      text-align: center;
+      margin-top: 15px;
+    }
+
   </style>
 </head>
+
 
 <body>
 
 <div class="container">
 
-  <!-- ========================= -->
+
+  <!-- ======================================== -->
   <!-- LOGIN -->
-  <!-- ========================= -->
+  <!-- ======================================== -->
 
   <div id="loginPage">
 
@@ -218,6 +270,7 @@
         Chauffeur aanmelden
       </h2>
 
+
       <label for="code">
         Chauffeurscode
       </label>
@@ -229,6 +282,7 @@
         placeholder="Code"
         autocomplete="off"
       >
+
 
       <label for="bus">
         Kies bus
@@ -254,6 +308,7 @@
 
       </select>
 
+
       <button
         id="loginButton"
         onclick="login()"
@@ -261,10 +316,12 @@
         INLOGGEN
       </button>
 
+
       <div
         id="loginError"
         class="error"
       ></div>
+
 
       <div class="small">
         Den Berk Delice – digitale buscontrole
@@ -275,9 +332,10 @@
   </div>
 
 
-  <!-- ========================= -->
+
+  <!-- ======================================== -->
   <!-- SCANNER -->
-  <!-- ========================= -->
+  <!-- ======================================== -->
 
   <div id="scannerPage">
 
@@ -289,10 +347,14 @@
       Buscontrole
     </div>
 
+
+    <!-- BUS -->
+
     <div class="busInfo">
       Bus:
       <span id="busNaam"></span>
     </div>
+
 
     <div class="card">
 
@@ -301,34 +363,9 @@
       </h2>
 
 
-      <!-- INSTRUCTIE BOVEN CAMERA -->
-
-      <div class="cameraHelp">
-
-        📷 Richt de camera op de QR-code van de medewerker.
-        <br>
-
-        De controle gebeurt automatisch.
-
-      </div>
-
-
-      <!-- CAMERA -->
-
-      <div id="reader"></div>
-
-
-      <!-- CONTROLE BEZIG -->
-
-      <div
-        id="loading"
-        class="loading"
-      >
-        Controleren...
-      </div>
-
-
-      <!-- RESULTAAT -->
+      <!-- ==================================== -->
+      <!-- RESULTAAT DIRECT BOVEN CAMERA -->
+      <!-- ==================================== -->
 
       <div
         id="status"
@@ -353,7 +390,43 @@
       </div>
 
 
+      <!-- ==================================== -->
+      <!-- INSTRUCTIE -->
+      <!-- ==================================== -->
+
+      <div class="cameraHelp">
+
+        📷 Richt de camera op de QR-code van de medewerker.
+
+        <br>
+
+        De controle gebeurt automatisch.
+
+      </div>
+
+
+      <!-- ==================================== -->
+      <!-- CAMERA -->
+      <!-- ==================================== -->
+
+      <div id="reader"></div>
+
+
+      <!-- ==================================== -->
+      <!-- CONTROLEREN -->
+      <!-- ==================================== -->
+
+      <div
+        id="loading"
+        class="loading"
+      >
+        Controleren...
+      </div>
+
+
+      <!-- ==================================== -->
       <!-- UITLOGGEN -->
+      <!-- ==================================== -->
 
       <button
         class="logout"
@@ -369,7 +442,9 @@
 </div>
 
 
+
 <script>
+
 
   /*
    * =========================================================
@@ -400,14 +475,11 @@
   let audioContext = null;
 
 
+
   /*
    * =========================================================
    * AUDIO INITIALISEREN
    * =========================================================
-   *
-   * Dit gebeurt na de klik van de chauffeur op INLOGGEN.
-   * Dat is belangrijk voor iPhone/Safari.
-   *
    */
 
   function initAudio() {
@@ -422,11 +494,13 @@
 
         if (AudioContext) {
 
-          audioContext = new AudioContext();
+          audioContext =
+            new AudioContext();
 
         }
 
       }
+
 
       if (
         audioContext &&
@@ -438,6 +512,7 @@
       }
 
     }
+
     catch (e) {
 
       console.log(
@@ -450,15 +525,22 @@
   }
 
 
+
   /*
    * =========================================================
    * BEEP AFSPELEN
    * =========================================================
+   *
+   * frequency = toonhoogte
+   * duration  = duur in milliseconden
+   *
+   * Het volume staat bewust hoger.
    */
 
   function playBeep(
     frequency,
-    duration
+    duration,
+    volume
   ) {
 
     try {
@@ -468,6 +550,7 @@
         initAudio();
 
       }
+
 
       if (!audioContext) {
 
@@ -488,15 +571,22 @@
       const oscillator =
         audioContext.createOscillator();
 
+
       const gainNode =
         audioContext.createGain();
 
 
-      oscillator.type = "sine";
+      oscillator.type =
+        "sine";
+
 
       oscillator.frequency.value =
         frequency;
 
+
+      /*
+       * STARTVOLUME
+       */
 
       gainNode.gain.setValueAtTime(
         0.0001,
@@ -505,10 +595,14 @@
 
 
       gainNode.gain.exponentialRampToValueAtTime(
-        0.25,
+        volume,
         audioContext.currentTime + 0.02
       );
 
+
+      /*
+       * VOLUME TERUG NAAR 0
+       */
 
       gainNode.gain.exponentialRampToValueAtTime(
         0.0001,
@@ -520,6 +614,7 @@
       oscillator.connect(
         gainNode
       );
+
 
       gainNode.connect(
         audioContext.destination
@@ -535,6 +630,7 @@
       );
 
     }
+
     catch (e) {
 
       console.log(
@@ -545,6 +641,7 @@
     }
 
   }
+
 
 
   /*
@@ -599,6 +696,7 @@
               resolve(data);
 
             }
+
             finally {
 
               delete window[
@@ -695,6 +793,7 @@
   }
 
 
+
   /*
    * =========================================================
    * CHAUFFEUR INLOGGEN
@@ -704,8 +803,8 @@
   async function login() {
 
     /*
-     * Audio activeren na de klik
-     * van de chauffeur.
+     * Audio activeren na
+     * de klik van de chauffeur.
      */
 
     initAudio();
@@ -859,6 +958,7 @@
   }
 
 
+
   /*
    * =========================================================
    * CAMERA STARTEN
@@ -946,6 +1046,7 @@
   }
 
 
+
   /*
    * =========================================================
    * QR-CODE GELEZEN
@@ -1004,8 +1105,8 @@
 
 
       /*
-       * Resultaat zichtbaar houden
-       * voor de chauffeur.
+       * Resultaat blijft
+       * 1,8 seconden zichtbaar.
        */
 
       await sleep(
@@ -1032,12 +1133,13 @@
 
 
       /*
-       * Lange piep bij technisch probleem
+       * Lange duidelijke foutpiep
        */
 
       playBeep(
-        400,
-        1000
+        850,
+        1000,
+        0.55
       );
 
 
@@ -1068,6 +1170,7 @@
   }
 
 
+
   /*
    * =========================================================
    * ONGELDIGE QR-CODES
@@ -1083,6 +1186,7 @@
      */
 
   }
+
 
 
   /*
@@ -1162,11 +1266,15 @@
 
       /*
        * KORTE HOGE PIEP
+       * 1200 Hz
+       * 0,18 seconde
+       * duidelijk volume
        */
 
       playBeep(
-        900,
-        180
+        1200,
+        180,
+        0.45
       );
 
     }
@@ -1199,18 +1307,25 @@
 
 
       /*
-       * LANGE LAGE BIEEEEP
+       * ================================================
+       * LANGE EN DUIDELIJKE RODE PIEP
+       *
+       * 850 Hz
        * 1 seconde
+       * extra luid
+       * ================================================
        */
 
       playBeep(
-        400,
-        1000
+        850,
+        1000,
+        0.60
       );
 
     }
 
   }
+
 
 
   /*
@@ -1270,6 +1385,7 @@
   }
 
 
+
   /*
    * =========================================================
    * RESULTAAT VERBERGEN
@@ -1286,6 +1402,7 @@
       "none";
 
   }
+
 
 
   /*
@@ -1378,14 +1495,11 @@
   }
 
 
+
   /*
    * =========================================================
    * BIJ OPENEN
    * =========================================================
-   *
-   * Vorige chauffeurssessie wordt bewust verwijderd.
-   * De chauffeur moet opnieuw inloggen.
-   *
    */
 
   window.addEventListener(
@@ -1403,6 +1517,11 @@
           "gekozenBus"
         );
 
+
+      /*
+       * Voor veiligheid moet de
+       * chauffeur opnieuw inloggen.
+       */
 
       if (
         savedToken &&
@@ -1422,6 +1541,7 @@
 
     }
   );
+
 
 
   /*
