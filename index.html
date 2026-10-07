@@ -263,7 +263,7 @@ button:disabled {
 }
 
 /* =========================================================
-   BEDIENING
+   BEDIENING ONDERAAN
    ========================================================= */
 
 .controls {
@@ -356,285 +356,298 @@ button:disabled {
 
 <div class="container">
 
-<!-- =====================================================
-     LOGIN
-     ===================================================== -->
+  <!-- =====================================================
+       LOGIN
+       ===================================================== -->
 
-<div id="loginPage">
+  <div id="loginPage">
 
-  <div class="logo">
-    DEN BERK DELICE
-  </div>
-
-  <div class="subtitle">
-    Digitale buscontrole
-  </div>
-
-  <div class="card">
-
-    <h2 style="text-align:center;">
-      Chauffeur aanmelden
-    </h2>
-
-    <label for="code">
-      Chauffeurscode
-    </label>
-
-    <input
-      type="password"
-      id="code"
-      inputmode="numeric"
-      placeholder="Code"
-      autocomplete="off">
-
-    <label for="bus">
-      Kies bus
-    </label>
-
-    <select id="bus">
-
-      <option value="">
-        -- Kies bus --
-      </option>
-
-      <option value="BUS-A">
-        BUS-A
-      </option>
-
-      <option value="BUS-B">
-        BUS-B
-      </option>
-
-      <option value="BUS-C">
-        BUS-C
-      </option>
-
-      <option value="BUS-D">
-        BUS-D
-      </option>
-
-    </select>
-
-    <button
-      id="loginButton"
-      onclick="login()">
-
-      INLOGGEN
-
-    </button>
-
-    <div
-      id="loginError"
-      class="error">
+    <div class="logo">
+      DEN BERK DELICE
     </div>
 
-  </div>
-
-</div>
-
-
-<!-- =====================================================
-     SCANNER
-     ===================================================== -->
-
-<div id="scannerPage">
-
-  <div class="logo">
-    DEN BERK DELICE
-  </div>
-
-  <div class="busHeader">
-
-    <div style="font-size:12px;">
-      BUS
+    <div class="subtitle">
+      Digitale buscontrole
     </div>
 
-    <div
-      id="busNaam"
-      class="busNaam">
-      BUS-A
-    </div>
+    <div class="card">
 
-  </div>
+      <h2 style="text-align:center;">
+        Chauffeur aanmelden
+      </h2>
 
-
-  <!-- CAPACITEIT -->
-
-  <div
-    id="capacityBox"
-    class="capacityBox">
-
-    <div
-      id="capacityMain"
-      class="capacityMain">
-
-      0 / 0 GESCAND
-
-    </div>
-
-    <div
-      id="capacityFree"
-      class="capacityFree">
-
-      0 PLAATSEN VRIJ
-
-    </div>
-
-    <div
-      id="capacityStatus"
-      class="capacityStatus">
-    </div>
-
-  </div>
-
-
-  <!-- RESULTAAT -->
-
-  <div id="status">
-
-    <div
-      id="statusBig"
-      class="statusBig">
-    </div>
-
-    <div
-      id="statusName"
-      class="statusName">
-    </div>
-
-    <div
-      id="statusReason"
-      class="statusReason">
-    </div>
-
-  </div>
-
-
-  <!-- CAMERA -->
-
-  <div class="scannerCard">
-
-    <div class="scannerTitle">
-      📷 SCAN BUSKAART
-    </div>
-
-    <div id="reader"></div>
-
-    <div
-      id="loading">
-      Controleren...
-    </div>
-
-    <div id="scannerMessage">
-      Richt de camera op de QR-code.
-    </div>
-
-  </div>
-
-
-  <!-- BEDIENING -->
-
-  <div class="controls">
-
-    <div class="controlsTitle">
-      BEDIENING
-    </div>
-
-    <button
-      class="controlButton startButton"
-      onclick="startScanner()">
-
-      ▶ SCANNER STARTEN
-
-    </button>
-
-    <button
-      class="controlButton stopButton"
-      onclick="stopScanner()">
-
-      ■ SCANNER STOPPEN
-
-    </button>
-
-    <button
-      class="controlButton manualButton"
-      onclick="openManualPanel()">
-
-      👤 HANDMATIGE CONTROLE
-
-    </button>
-
-
-    <!-- HANDMATIGE CONTROLE -->
-
-    <div id="manualPanel">
-
-      <div class="manualTitle">
-        Handmatige controle
-      </div>
-
-      <div class="manualInfo">
-        Gebruik dit alleen wanneer de medewerker
-        zijn buskaart vergeten is.
-      </div>
-
-      <label for="manualPersonnel">
-        Personeelsnummer
+      <label for="code">
+        Chauffeurscode
       </label>
 
       <input
-        id="manualPersonnel"
-        type="text"
+        type="password"
+        id="code"
         inputmode="numeric"
-        placeholder="Personeelsnummer"
+        placeholder="Code"
         autocomplete="off">
 
-      <label for="manualLocation">
-        Locatie
+      <label for="bus">
+        Kies bus
       </label>
 
-      <select id="manualLocation">
+      <select id="bus">
 
         <option value="">
-          -- Eerst personeelsnummer ingeven --
+          -- Kies bus --
+        </option>
+
+        <option value="BUS-A">
+          BUS-A
+        </option>
+
+        <option value="BUS-B">
+          BUS-B
+        </option>
+
+        <option value="BUS-C">
+          BUS-C
+        </option>
+
+        <option value="BUS-D">
+          BUS-D
         </option>
 
       </select>
 
-      <div class="manualButtons">
+      <button
+        id="loginButton"
+        onclick="login()">
 
-        <button
-          class="cancelButton"
-          onclick="closeManualPanel()">
+        INLOGGEN
 
-          ANNULEREN
+      </button>
 
-        </button>
+      <div
+        id="loginError"
+        class="error">
+      </div>
 
-        <button
-          class="checkButton"
-          onclick="manualCheck()">
+    </div>
 
-          CONTROLEREN
+  </div>
 
-        </button>
+
+  <!-- =====================================================
+       SCANNER
+       ===================================================== -->
+
+  <div id="scannerPage">
+
+    <div class="logo">
+      DEN BERK DELICE
+    </div>
+
+    <!-- BUS -->
+
+    <div class="busHeader">
+
+      <div style="font-size:12px;">
+        BUS
+      </div>
+
+      <div
+        id="busNaam"
+        class="busNaam">
+
+        BUS-A
 
       </div>
 
     </div>
 
 
-    <button
-      class="controlButton logoutButton"
-      onclick="logout()">
+    <!-- CAPACITEIT -->
 
-      UITLOGGEN
+    <div
+      id="capacityBox"
+      class="capacityBox">
 
-    </button>
+      <div
+        id="capacityMain"
+        class="capacityMain">
+
+        0 / 0 GESCAND
+
+      </div>
+
+      <div
+        id="capacityFree"
+        class="capacityFree">
+
+        0 PLAATSEN VRIJ
+
+      </div>
+
+      <div
+        id="capacityStatus"
+        class="capacityStatus">
+      </div>
+
+    </div>
+
+
+    <!-- RESULTAAT BOVEN CAMERA -->
+
+    <div id="status">
+
+      <div
+        id="statusBig"
+        class="statusBig">
+      </div>
+
+      <div
+        id="statusName"
+        class="statusName">
+      </div>
+
+      <div
+        id="statusReason"
+        class="statusReason">
+      </div>
+
+    </div>
+
+
+    <!-- CAMERA -->
+
+    <div class="scannerCard">
+
+      <div class="scannerTitle">
+        📷 SCAN BUSKAART
+      </div>
+
+      <div id="reader"></div>
+
+      <div
+        id="loading">
+
+        Controleren...
+
+      </div>
+
+      <div id="scannerMessage">
+
+        Richt de camera op de QR-code.
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         BEDIENING ONDERAAN
+         ================================================= -->
+
+    <div class="controls">
+
+      <div class="controlsTitle">
+        BEDIENING
+      </div>
+
+      <button
+        class="controlButton startButton"
+        onclick="startScanner()">
+
+        ▶ SCANNER STARTEN
+
+      </button>
+
+      <button
+        class="controlButton stopButton"
+        onclick="stopScanner()">
+
+        ■ SCANNER STOPPEN
+
+      </button>
+
+
+      <!-- HANDMATIGE CONTROLE -->
+
+      <button
+        class="controlButton manualButton"
+        onclick="openManualPanel()">
+
+        👤 HANDMATIGE CONTROLE
+
+      </button>
+
+
+      <div id="manualPanel">
+
+        <div class="manualTitle">
+          Handmatige controle
+        </div>
+
+        <div class="manualInfo">
+
+          Gebruik dit alleen wanneer de medewerker
+          zijn buskaart vergeten is.
+
+        </div>
+
+        <label for="manualPersonnel">
+          Personeelsnummer
+        </label>
+
+        <input
+          id="manualPersonnel"
+          type="text"
+          inputmode="numeric"
+          placeholder="Personeelsnummer"
+          autocomplete="off">
+
+        <label for="manualLocation">
+          Locatie
+        </label>
+
+        <select id="manualLocation">
+
+          <option value="">
+            -- Eerst personeelsnummer ingeven --
+          </option>
+
+        </select>
+
+        <div class="manualButtons">
+
+          <button
+            class="cancelButton"
+            onclick="closeManualPanel()">
+
+            ANNULEREN
+
+          </button>
+
+          <button
+            class="checkButton"
+            onclick="manualCheck()">
+
+            CONTROLEREN
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="controlButton logoutButton"
+        onclick="logout()">
+
+        UITLOGGEN
+
+      </button>
+
+    </div>
 
   </div>
-
-</div>
 
 </div>
 
@@ -642,142 +655,403 @@ button:disabled {
 <script>
 
 /* =========================================================
-   INSTELLINGEN
+   CONFIGURATIE
    ========================================================= */
 
 const API_URL =
   "https://script.google.com/macros/s/AKfycbyilW3j28SCm-7mch8tgdDkp9RzQsi_J-RsUD3ziFP26LVlJuE06fEbiCpPBVqUQntD4w/exec";
 
 let chauffeurToken = "";
+
 let gekozenBus = "";
+
 let scanner = null;
+
 let scannerRunning = false;
+
 let scanBusy = false;
-let resultTimer = null;
+
 let capacityTimer = null;
+
+let resultTimer = null;
+
+let audioContext = null;
+
+
+/*
+ * NIEUW:
+ * Houdt de laatst gescande QR bij.
+ *
+ * html5-qrcode kan dezelfde QR-code meerdere
+ * keren per seconde herkennen.
+ *
+ * Daarom blokkeren we dezelfde QR tijdelijk.
+ */
+
+let laatsteGesandeBadge = "";
+
+let laatsteScanTijd = 0;
+
+const SCAN_BLOKKADE_MS = 5000;
 
 
 /* =========================================================
-   API CALL
+   AUDIO
+   ========================================================= */
+
+function initAudio() {
+
+  try {
+
+    if (!audioContext) {
+
+      audioContext =
+        new (window.AudioContext ||
+             window.webkitAudioContext)();
+
+    }
+
+    if (
+      audioContext.state === "suspended"
+    ) {
+
+      audioContext.resume();
+
+    }
+
+  }
+
+  catch (e) {
+
+    console.log(
+      "Audio niet beschikbaar",
+      e
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   GROEN GELUID
+   ========================================================= */
+
+function speelGroenGeluid() {
+
+  try {
+
+    initAudio();
+
+    const now =
+      audioContext.currentTime;
+
+    const oscillator =
+      audioContext.createOscillator();
+
+    const gain =
+      audioContext.createGain();
+
+    oscillator.type = "sine";
+
+    oscillator.frequency.setValueAtTime(
+      880,
+      now
+    );
+
+    oscillator.frequency.setValueAtTime(
+      1100,
+      now + 0.10
+    );
+
+    gain.gain.setValueAtTime(
+      0.25,
+      now
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.001,
+      now + 0.22
+    );
+
+    oscillator.connect(gain);
+
+    gain.connect(
+      audioContext.destination
+    );
+
+    oscillator.start(now);
+
+    oscillator.stop(
+      now + 0.23
+    );
+
+  }
+
+  catch (e) {
+
+    console.log(e);
+
+  }
+
+}
+
+
+/* =========================================================
+   ROOD GELUID
+   ========================================================= */
+
+function speelRoodGeluid() {
+
+  try {
+
+    initAudio();
+
+    const now =
+      audioContext.currentTime;
+
+
+    /*
+     * Rood ongeveer 2x zo luid
+     * als groen.
+     */
+
+    const osc1 =
+      audioContext.createOscillator();
+
+    const gain1 =
+      audioContext.createGain();
+
+    osc1.type = "square";
+
+    osc1.frequency.setValueAtTime(
+      330,
+      now
+    );
+
+    gain1.gain.setValueAtTime(
+      0.50,
+      now
+    );
+
+    gain1.gain.exponentialRampToValueAtTime(
+      0.001,
+      now + 0.28
+    );
+
+    osc1.connect(gain1);
+
+    gain1.connect(
+      audioContext.destination
+    );
+
+    osc1.start(now);
+
+    osc1.stop(
+      now + 0.29
+    );
+
+
+    const osc2 =
+      audioContext.createOscillator();
+
+    const gain2 =
+      audioContext.createGain();
+
+    osc2.type = "square";
+
+    osc2.frequency.setValueAtTime(
+      220,
+      now + 0.30
+    );
+
+    gain2.gain.setValueAtTime(
+      0.50,
+      now + 0.30
+    );
+
+    gain2.gain.exponentialRampToValueAtTime(
+      0.001,
+      now + 0.58
+    );
+
+    osc2.connect(gain2);
+
+    gain2.connect(
+      audioContext.destination
+    );
+
+    osc2.start(
+      now + 0.30
+    );
+
+    osc2.stop(
+      now + 0.59
+    );
+
+
+    if (
+      navigator.vibrate
+    ) {
+
+      navigator.vibrate([
+        180,
+        80,
+        180
+      ]);
+
+    }
+
+  }
+
+  catch (e) {
+
+    console.log(e);
+
+  }
+
+}
+
+
+/* =========================================================
+   API
    ========================================================= */
 
 function apiCall(params) {
 
-  return new Promise(function(resolve, reject) {
+  return new Promise(
+    (resolve, reject) => {
 
-    const callbackName =
-      "jsonpCallback_" +
-      Date.now() +
-      "_" +
-      Math.floor(Math.random() * 100000);
-
-    const script =
-      document.createElement("script");
-
-    let finished = false;
-
-    window[callbackName] =
-      function(data) {
-
-        if (finished) return;
-
-        finished = true;
-
-        try {
-          delete window[callbackName];
-        } catch (e) {}
-
-        if (script.parentNode) {
-          script.parentNode.removeChild(script);
-        }
-
-        resolve(data);
-      };
-
-    script.onerror =
-      function() {
-
-        if (finished) return;
-
-        finished = true;
-
-        try {
-          delete window[callbackName];
-        } catch (e) {}
-
-        if (script.parentNode) {
-          script.parentNode.removeChild(script);
-        }
-
-        reject(
-          new Error(
-            "API verbinding mislukt"
-          )
+      const callbackName =
+        "callback_" +
+        Date.now() +
+        "_" +
+        Math.floor(
+          Math.random() * 100000
         );
 
-      };
 
-    const query =
-      new URLSearchParams();
+      const script =
+        document.createElement(
+          "script"
+        );
 
-    Object.keys(params).forEach(
-      function(key) {
 
-        if (
-          params[key] !== undefined &&
-          params[key] !== null
-        ) {
+      const query =
+        new URLSearchParams(
+          params
+        );
 
-          query.append(
-            key,
-            params[key]
+
+      query.set(
+        "callback",
+        callbackName
+      );
+
+
+      script.src =
+        API_URL +
+        "?" +
+        query.toString();
+
+
+      window[callbackName] =
+        function(data) {
+
+          try {
+
+            resolve(data);
+
+          }
+
+          finally {
+
+            delete window[
+              callbackName
+            ];
+
+            if (
+              script.parentNode
+            ) {
+
+              script.parentNode.removeChild(
+                script
+              );
+
+            }
+
+          }
+
+        };
+
+
+      script.onerror =
+        function() {
+
+          delete window[
+            callbackName
+          ];
+
+          if (
+            script.parentNode
+          ) {
+
+            script.parentNode.removeChild(
+              script
+            );
+
+          }
+
+          reject(
+            new Error(
+              "Kan server niet bereiken."
+            )
           );
 
-        }
+        };
 
-      }
-    );
 
-    query.append(
-      "callback",
-      callbackName
-    );
+      document.body.appendChild(
+        script
+      );
 
-    script.src =
-      API_URL +
-      "?" +
-      query.toString();
 
-    document.body.appendChild(
-      script
-    );
+      setTimeout(
+        () => {
 
-    setTimeout(
-      function() {
+          if (
+            window[callbackName]
+          ) {
 
-        if (finished) return;
+            delete window[
+              callbackName
+            ];
 
-        finished = true;
+            if (
+              script.parentNode
+            ) {
 
-        try {
-          delete window[callbackName];
-        } catch (e) {}
+              script.parentNode.removeChild(
+                script
+              );
 
-        if (script.parentNode) {
-          script.parentNode.removeChild(script);
-        }
+            }
 
-        reject(
-          new Error(
-            "Timeout bij API"
-          )
-        );
+            reject(
+              new Error(
+                "Server reageert niet."
+              )
+            );
 
-      },
-      15000
-    );
+          }
 
-  });
+        },
+        15000
+      );
+
+    }
+
+  );
 
 }
 
@@ -788,26 +1062,28 @@ function apiCall(params) {
 
 async function login() {
 
+  initAudio();
+
   const code =
     document
       .getElementById("code")
       .value
       .trim();
 
+
   const bus =
     document
       .getElementById("bus")
       .value;
 
+
   const error =
     document
       .getElementById("loginError");
 
-  const button =
-    document
-      .getElementById("loginButton");
 
   error.textContent = "";
+
 
   if (!code) {
 
@@ -815,7 +1091,9 @@ async function login() {
       "Vul de chauffeurscode in.";
 
     return;
+
   }
+
 
   if (!bus) {
 
@@ -823,12 +1101,20 @@ async function login() {
       "Kies eerst een bus.";
 
     return;
+
   }
+
+
+  const button =
+    document
+      .getElementById("loginButton");
+
 
   button.disabled = true;
 
   button.textContent =
-    "AANMELDEN...";
+    "INLOGGEN...";
+
 
   try {
 
@@ -839,60 +1125,56 @@ async function login() {
 
         action: "login",
 
-        code: code,
-
-        bus: bus
+        code: code
 
       });
 
 
     if (
-      result &&
-      result.toegestaan
+      !result.toegestaan
     ) {
 
-      chauffeurToken =
-        result.token || "";
-
-      gekozenBus =
-        result.bus || bus;
-
-      document
-        .getElementById("loginPage")
-        .style.display =
-        "none";
-
-      document
-        .getElementById("scannerPage")
-        .style.display =
-        "block";
-
-      document
-        .getElementById("busNaam")
-        .textContent =
-        gekozenBus;
-
-      await updateCapacity();
-
-      startCapacityTimer();
-
-      startScanner();
-
-    }
-
-    else {
-
       error.textContent =
-        (
-          result &&
-          (
-            result.reden ||
-            result.message
-          )
-        ) ||
-        "Aanmelden mislukt.";
+        result.melding ||
+        result.reden ||
+        "Inloggen mislukt.";
+
+      return;
 
     }
+
+
+    chauffeurToken =
+      result.token;
+
+
+    gekozenBus =
+      bus;
+
+
+    document
+      .getElementById("busNaam")
+      .textContent =
+      gekozenBus;
+
+
+    document
+      .getElementById("loginPage")
+      .style.display =
+      "none";
+
+
+    document
+      .getElementById("scannerPage")
+      .style.display =
+      "block";
+
+
+    await updateCapacity();
+
+    startScanner();
+
+    startCapacityTimer();
 
   }
 
@@ -901,7 +1183,7 @@ async function login() {
     console.error(e);
 
     error.textContent =
-      "Aanmelden mislukt. Controleer de verbinding.";
+      "Verbinding met de buscontrole mislukt.";
 
   }
 
@@ -923,9 +1205,15 @@ async function login() {
 
 async function updateCapacity() {
 
-  if (!gekozenBus || !chauffeurToken) {
+  if (
+    !gekozenBus ||
+    !chauffeurToken
+  ) {
+
     return;
+
   }
+
 
   try {
 
@@ -944,23 +1232,20 @@ async function updateCapacity() {
 
 
     if (
-      result &&
-      result.toegestaan
+      result
     ) {
 
-      toonCapaciteit(
-        result
-      );
+      toonCapaciteit(result);
 
     }
 
   }
 
-  catch (error) {
+  catch (e) {
 
-    console.error(
-      "Capaciteit:",
-      error
+    console.log(
+      "Capaciteit ophalen mislukt",
+      e
     );
 
   }
@@ -970,42 +1255,23 @@ async function updateCapacity() {
 
 function toonCapaciteit(result) {
 
-  const max =
-    Number(
-      result.maxPlaatsen ||
-      result.max ||
-      0
-    );
-
-  const aantal =
-    Number(
-      result.aantalGeslaagd ||
-      result.aantal ||
-      result.gescand ||
-      0
-    );
-
-  const vrij =
-    Math.max(
-      0,
-      max - aantal
-    );
-
-
   const box =
     document.getElementById(
       "capacityBox"
     );
+
 
   const main =
     document.getElementById(
       "capacityMain"
     );
 
+
   const free =
     document.getElementById(
       "capacityFree"
     );
+
 
   const status =
     document.getElementById(
@@ -1013,8 +1279,26 @@ function toonCapaciteit(result) {
     );
 
 
+  const gebruikt =
+    Number(
+      result.gebruiktePlaatsen || 0
+    );
+
+
+  const max =
+    Number(
+      result.maxPlaatsen || 0
+    );
+
+
+  const vrij =
+    Number(
+      result.vrijePlaatsen || 0
+    );
+
+
   main.textContent =
-    aantal +
+    gebruikt +
     " / " +
     max +
     " GESCAND";
@@ -1025,6 +1309,11 @@ function toonCapaciteit(result) {
     " PLAATSEN VRIJ";
 
 
+  status.textContent =
+    result.capaciteitsStatus ||
+    "";
+
+
   box.classList.remove(
     "capacityNormal",
     "capacityWarning",
@@ -1032,27 +1321,25 @@ function toonCapaciteit(result) {
   );
 
 
-  if (vrij <= 0) {
+  if (
+    result.capaciteitsStatus ===
+    "BUS VOL"
+  ) {
 
     box.classList.add(
       "capacityFull"
     );
 
-    status.textContent =
-      "🛑 BUS VOL";
-
   }
 
-  else if (vrij <= 10) {
+  else if (
+    result.capaciteitsStatus ===
+    "LAATSTE PLAATSEN"
+  ) {
 
     box.classList.add(
       "capacityWarning"
     );
-
-    status.textContent =
-      "⚠️ NOG " +
-      vrij +
-      " PLAATSEN";
 
   }
 
@@ -1061,9 +1348,6 @@ function toonCapaciteit(result) {
     box.classList.add(
       "capacityNormal"
     );
-
-    status.textContent =
-      "";
 
   }
 
@@ -1077,7 +1361,7 @@ function startCapacityTimer() {
   capacityTimer =
     setInterval(
       updateCapacity,
-      10000
+      3000
     );
 
 }
@@ -1085,7 +1369,9 @@ function startCapacityTimer() {
 
 function stopCapacityTimer() {
 
-  if (capacityTimer) {
+  if (
+    capacityTimer
+  ) {
 
     clearInterval(
       capacityTimer
@@ -1104,20 +1390,71 @@ function stopCapacityTimer() {
 
 async function startScanner() {
 
-  if (scannerRunning) {
+  if (
+    scannerRunning
+  ) {
+
     return;
+
   }
 
-  if (!scanner) {
+
+  if (
+    !gekozenBus ||
+    !chauffeurToken
+  ) {
+
+    return;
+
+  }
+
+
+  try {
+
+    document
+      .getElementById(
+        "scannerMessage"
+      )
+      .textContent =
+      "Camera starten...";
+
 
     scanner =
       new Html5Qrcode(
         "reader"
       );
 
-  }
 
-  try {
+    const config = {
+
+      fps: 12,
+
+      qrbox: function(
+        viewfinderWidth,
+        viewfinderHeight
+      ) {
+
+        const size =
+          Math.min(
+            viewfinderWidth,
+            viewfinderHeight
+          ) * 0.72;
+
+
+        return {
+
+          width:
+            Math.floor(size),
+
+          height:
+            Math.floor(size)
+
+        };
+
+      }
+
+    };
+
 
     await scanner.start(
 
@@ -1126,32 +1463,7 @@ async function startScanner() {
           "environment"
       },
 
-      {
-        fps: 12,
-
-        qrbox:
-          function(
-            width,
-            height
-          ) {
-
-            const size =
-              Math.min(
-                width,
-                height
-              ) * 0.72;
-
-            return {
-              width: size,
-              height: size
-            };
-
-          },
-
-        aspectRatio:
-          1.0
-
-      },
+      config,
 
       onScanSuccess,
 
@@ -1163,27 +1475,27 @@ async function startScanner() {
     scannerRunning =
       true;
 
+
     document
       .getElementById(
         "scannerMessage"
       )
       .textContent =
-      "Scanner actief — scan de buskaart.";
+      "Scanner actief – richt op de QR-code.";
 
   }
 
   catch (error) {
 
-    console.error(
-      error
-    );
+    console.error(error);
 
     document
       .getElementById(
         "scannerMessage"
       )
-      .textContent =
-      "Camera kon niet worden gestart. Geef cameratoegang.";
+      .innerHTML =
+      "🔴 CAMERA KAN NIET STARTEN<br>" +
+      "Geef toestemming voor de camera.";
 
   }
 
@@ -1196,33 +1508,41 @@ async function startScanner() {
 
 async function stopScanner() {
 
-  if (
-    !scanner ||
-    !scannerRunning
-  ) {
-
-    return;
-
-  }
-
   try {
 
-    await scanner.stop();
+    if (
+      scanner &&
+      scannerRunning
+    ) {
 
-    scanner.clear();
+      await scanner.stop();
+
+      scanner.clear();
+
+    }
 
   }
 
-  catch (error) {
+  catch (e) {
 
-    console.error(
-      error
-    );
+    console.log(e);
 
   }
+
 
   scannerRunning =
     false;
+
+
+  scanner = null;
+
+
+  document
+    .getElementById(
+      "scannerMessage"
+    )
+    .textContent =
+    "Scanner gestopt.";
 
 }
 
@@ -1235,21 +1555,73 @@ async function onScanSuccess(
   decodedText
 ) {
 
-  if (scanBusy) {
-    return;
-  }
+  /*
+   * BELANGRIJK:
+   *
+   * html5-qrcode kan dezelfde QR
+   * meerdere keren onmiddellijk lezen.
+   *
+   * Daarom blokkeren we dezelfde
+   * QR-code gedurende 5 seconden.
+   */
 
   const badgeId =
     String(
       decodedText || ""
     ).trim();
 
+
+  const nu =
+    Date.now();
+
+
   if (!badgeId) {
+
     return;
+
   }
+
+
+  if (
+    badgeId ===
+      laatsteGesandeBadge &&
+    (
+      nu -
+      laatsteScanTijd
+    ) <
+      SCAN_BLOKKADE_MS
+  ) {
+
+    console.log(
+      "Dubbele QR-scan genegeerd:",
+      badgeId
+    );
+
+    return;
+
+  }
+
+
+  laatsteGesandeBadge =
+    badgeId;
+
+
+  laatsteScanTijd =
+    nu;
+
+
+  if (
+    scanBusy
+  ) {
+
+    return;
+
+  }
+
 
   scanBusy =
     true;
+
 
   document
     .getElementById(
@@ -1257,6 +1629,7 @@ async function onScanSuccess(
     )
     .style.display =
     "block";
+
 
   try {
 
@@ -1296,27 +1669,27 @@ async function onScanSuccess(
     }
 
 
-    if (
-      result.maxPlaatsen !==
-      undefined
-    ) {
+    /*
+     * BELANGRIJK:
+     *
+     * Altijd opnieuw de capaciteit
+     * ophalen.
+     *
+     * Dus zowel na groen als rood.
+     */
 
-      toonCapaciteit(
-        result
-      );
+    await updateCapacity();
 
-    }
 
-    else {
-
-      updateCapacity();
-
-    }
-
+    /*
+     * Groen én rood blijven
+     * 3 seconden zichtbaar.
+     */
 
     clearTimeout(
       resultTimer
     );
+
 
     resultTimer =
       setTimeout(
@@ -1330,16 +1703,20 @@ async function onScanSuccess(
 
     console.error(error);
 
+
     toonFout(
       "VERBINDINGSPROBLEEM",
       "Controle kon niet worden uitgevoerd."
     );
 
+
     speelRoodGeluid();
+
 
     clearTimeout(
       resultTimer
     );
+
 
     resultTimer =
       setTimeout(
@@ -1358,8 +1735,13 @@ async function onScanSuccess(
       .style.display =
       "none";
 
+
+    /*
+     * Scanner blijft actief.
+     */
+
     setTimeout(
-      function() {
+      () => {
 
         scanBusy =
           false;
@@ -1398,15 +1780,18 @@ function toonResultaat(
       "status"
     );
 
+
   const big =
     document.getElementById(
       "statusBig"
     );
 
+
   const name =
     document.getElementById(
       "statusName"
     );
+
 
   const reason =
     document.getElementById(
@@ -1417,6 +1802,7 @@ function toonResultaat(
   status.style.display =
     "block";
 
+
   status.classList.remove(
     "green",
     "red"
@@ -1424,7 +1810,6 @@ function toonResultaat(
 
 
   if (
-    result &&
     result.toegestaan
   ) {
 
@@ -1432,12 +1817,15 @@ function toonResultaat(
       "green"
     );
 
+
     big.textContent =
       "🟢 TOEGELATEN";
+
 
     name.textContent =
       result.naam ||
       "";
+
 
     reason.textContent =
       (
@@ -1462,23 +1850,18 @@ function toonResultaat(
       "red"
     );
 
+
     big.textContent =
       "🔴 NIET TOEGELATEN";
 
+
     name.textContent =
-      result &&
-      result.naam
-        ? result.naam
-        : "";
+      result.naam ||
+      "";
+
 
     reason.textContent =
-      (
-        result &&
-        (
-          result.reden ||
-          result.message
-        )
-      ) ||
+      result.reden ||
       "Geen toegang";
 
   }
@@ -1500,16 +1883,20 @@ function toonFout(
       "status"
     );
 
+
   status.style.display =
     "block";
+
 
   status.classList.remove(
     "green"
   );
 
+
   status.classList.add(
     "red"
   );
+
 
   document
     .getElementById(
@@ -1518,12 +1905,14 @@ function toonFout(
     .textContent =
     "🔴 " + titel;
 
+
   document
     .getElementById(
       "statusName"
     )
     .textContent =
     "";
+
 
   document
     .getElementById(
@@ -1546,8 +1935,10 @@ function verbergResultaat() {
       "status"
     );
 
+
   status.style.display =
     "none";
+
 
   document
     .getElementById(
@@ -1556,12 +1947,14 @@ function verbergResultaat() {
     .textContent =
     "";
 
+
   document
     .getElementById(
       "statusName"
     )
     .textContent =
     "";
+
 
   document
     .getElementById(
@@ -1574,163 +1967,7 @@ function verbergResultaat() {
 
 
 /* =========================================================
-   GELUID GROEN
-   ========================================================= */
-
-function speelGroenGeluid() {
-
-  try {
-
-    const AudioContext =
-      window.AudioContext ||
-      window.webkitAudioContext;
-
-    if (!AudioContext) {
-      return;
-    }
-
-    const ctx =
-      new AudioContext();
-
-    const oscillator =
-      ctx.createOscillator();
-
-    const gain =
-      ctx.createGain();
-
-    oscillator.type =
-      "sine";
-
-    oscillator.frequency.value =
-      880;
-
-    gain.gain.setValueAtTime(
-      0.28,
-      ctx.currentTime
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-      0.001,
-      ctx.currentTime + 0.35
-    );
-
-    oscillator.connect(
-      gain
-    );
-
-    gain.connect(
-      ctx.destination
-    );
-
-    oscillator.start();
-
-    oscillator.stop(
-      ctx.currentTime + 0.35
-    );
-
-  }
-
-  catch (e) {
-
-    console.error(e);
-
-  }
-
-}
-
-
-/* =========================================================
-   GELUID ROOD
-   ========================================================= */
-
-function speelRoodGeluid() {
-
-  try {
-
-    const AudioContext =
-      window.AudioContext ||
-      window.webkitAudioContext;
-
-    if (!AudioContext) {
-      return;
-    }
-
-    const ctx =
-      new AudioContext();
-
-
-    function beep(
-      frequency,
-      startTime,
-      duration
-    ) {
-
-      const oscillator =
-        ctx.createOscillator();
-
-      const gain =
-        ctx.createGain();
-
-      oscillator.type =
-        "square";
-
-      oscillator.frequency.value =
-        frequency;
-
-      gain.gain.setValueAtTime(
-        0.55,
-        startTime
-      );
-
-      gain.gain.exponentialRampToValueAtTime(
-        0.001,
-        startTime + duration
-      );
-
-      oscillator.connect(
-        gain
-      );
-
-      gain.connect(
-        ctx.destination
-      );
-
-      oscillator.start(
-        startTime
-      );
-
-      oscillator.stop(
-        startTime + duration
-      );
-
-    }
-
-
-    beep(
-      420,
-      ctx.currentTime,
-      0.22
-    );
-
-    beep(
-      300,
-      ctx.currentTime + 0.25,
-      0.30
-    );
-
-  }
-
-  catch (e) {
-
-    console.error(e);
-
-  }
-
-}
-
-
-/* =========================================================
-   HANDMATIGE CONTROLE OPENEN
+   HANDMATIGE CONTROLE
    ========================================================= */
 
 function openManualPanel() {
@@ -1740,22 +1977,23 @@ function openManualPanel() {
       "manualPanel"
     );
 
+
   panel.style.display =
     "block";
 
-  document
-    .getElementById(
-      "manualPersonnel"
-    )
-    .value =
-    "";
+
+  /*
+   * Locatiekeuze opnieuw leegmaken
+   * wanneer het scherm wordt geopend.
+   */
 
   document
     .getElementById(
       "manualLocation"
     )
     .innerHTML =
-    '<option value="">-- Eerst personeelsnummer ingeven --</option>';
+      '<option value="">-- Eerst personeelsnummer ingeven --</option>';
+
 
   document
     .getElementById(
@@ -1766,10 +2004,6 @@ function openManualPanel() {
 }
 
 
-/* =========================================================
-   HANDMATIGE CONTROLE SLUITEN
-   ========================================================= */
-
 function closeManualPanel() {
 
   document
@@ -1779,6 +2013,7 @@ function closeManualPanel() {
     .style.display =
     "none";
 
+
   document
     .getElementById(
       "manualPersonnel"
@@ -1786,18 +2021,19 @@ function closeManualPanel() {
     .value =
     "";
 
+
   document
     .getElementById(
       "manualLocation"
     )
-    .innerHTML =
-    '<option value="">-- Eerst personeelsnummer ingeven --</option>';
+    .value =
+    "";
 
 }
 
 
 /* =========================================================
-   MEDEWERKER ZOEKEN
+   LOCATIES OPHALEN VOOR HANDMATIGE CONTROLE
    ========================================================= */
 
 async function laadManualLocaties() {
@@ -1812,23 +2048,22 @@ async function laadManualLocaties() {
 
 
   const select =
-    document
-      .getElementById(
-        "manualLocation"
-      );
+    document.getElementById(
+      "manualLocation"
+    );
 
 
-  if (!personnel) {
+  if (
+    !personnel ||
+    !chauffeurToken
+  ) {
 
     select.innerHTML =
       '<option value="">-- Eerst personeelsnummer ingeven --</option>';
 
     return;
+
   }
-
-
-  select.innerHTML =
-    '<option value="">Medewerker zoeken...</option>';
 
 
   try {
@@ -1849,67 +2084,33 @@ async function laadManualLocaties() {
       });
 
 
-    console.log(
-      "Resultaat medewerker zoeken:",
-      result
-    );
-
-
-    /*
-     * BELANGRIJK:
-     * Backend gebruikt "toegestaan".
-     * NIET "ok".
-     */
-
-    if (
-      !result ||
-      !result.toegestaan
-    ) {
-
-      select.innerHTML =
-        '<option value="">Geen medewerker gevonden</option>';
-
-      return;
-    }
-
-
     const medewerkers =
-      result.medewerkers || [];
+      result.medewerkers ||
+      result.employees ||
+      result.items ||
+      [];
 
 
-    if (!medewerkers.length) {
-
-      select.innerHTML =
-        '<option value="">Geen medewerker gevonden</option>';
-
-      return;
-    }
+    select.innerHTML =
+      '<option value="">-- Kies locatie --</option>';
 
 
     const locaties = [];
 
 
     medewerkers.forEach(
-      function(medewerker) {
+      function(m) {
 
         const locatie =
           String(
-            medewerker.locatie ||
-            ""
+            m.locatie || ""
           ).trim();
 
 
         if (
           locatie &&
-          !locaties.some(
-            function(bestaande) {
-
-              return (
-                bestaande.toUpperCase() ===
-                locatie.toUpperCase()
-              );
-
-            }
+          !locaties.includes(
+            locatie
           )
         ) {
 
@@ -1923,35 +2124,6 @@ async function laadManualLocaties() {
     );
 
 
-    select.innerHTML =
-      "";
-
-
-    if (!locaties.length) {
-
-      select.innerHTML =
-        '<option value="">Geen locatie gevonden</option>';
-
-      return;
-    }
-
-
-    const eerste =
-      document.createElement(
-        "option"
-      );
-
-    eerste.value =
-      "";
-
-    eerste.textContent =
-      "-- Kies locatie --";
-
-    select.appendChild(
-      eerste
-    );
-
-
     locaties.forEach(
       function(locatie) {
 
@@ -1960,11 +2132,14 @@ async function laadManualLocaties() {
             "option"
           );
 
+
         option.value =
           locatie;
 
+
         option.textContent =
           locatie;
+
 
         select.appendChild(
           option
@@ -1975,8 +2150,8 @@ async function laadManualLocaties() {
 
 
     /*
-     * Slechts één locatie:
-     * automatisch kiezen.
+     * Als er maar één locatie is,
+     * automatisch selecteren.
      */
 
     if (
@@ -1988,17 +2163,28 @@ async function laadManualLocaties() {
 
     }
 
+
+    if (
+      !locaties.length
+    ) {
+
+      select.innerHTML =
+        '<option value="">-- Personeelsnummer niet gevonden --</option>';
+
+    }
+
   }
 
-  catch (error) {
+  catch (e) {
 
     console.error(
-      "Fout bij zoeken medewerker:",
-      error
+      "Locaties ophalen mislukt",
+      e
     );
 
+
     select.innerHTML =
-      '<option value="">Fout bij zoeken</option>';
+      '<option value="">-- Locatie niet gevonden --</option>';
 
   }
 
@@ -2025,8 +2211,7 @@ async function manualCheck() {
       .getElementById(
         "manualLocation"
       )
-      .value
-      .trim();
+      .value;
 
 
   if (!personnel) {
@@ -2036,22 +2221,34 @@ async function manualCheck() {
     );
 
     return;
+
   }
 
 
   if (!location) {
 
-    await laadManualLocaties();
-
     alert(
-      "Kies de juiste locatie."
+      "Kies de locatie."
     );
 
     return;
+
   }
 
 
   try {
+
+    /*
+     * BELANGRIJK:
+     *
+     * De backend verwacht:
+     *
+     * personeelsnummer
+     *
+     * en NIET:
+     *
+     * personnel
+     */
 
     const result =
       await apiCall({
@@ -2059,12 +2256,6 @@ async function manualCheck() {
         api: "1",
 
         action: "manual",
-
-        /*
-         * DIT IS BELANGRIJK.
-         * De Apps Script backend verwacht:
-         * personeelsnummer
-         */
 
         personeelsnummer:
           personnel,
@@ -2081,19 +2272,12 @@ async function manualCheck() {
       });
 
 
-    console.log(
-      "Resultaat handmatige controle:",
-      result
-    );
-
-
     toonResultaat(
       result
     );
 
 
     if (
-      result &&
       result.toegestaan
     ) {
 
@@ -2108,23 +2292,12 @@ async function manualCheck() {
     }
 
 
-    if (
-      result &&
-      result.maxPlaatsen !==
-      undefined
-    ) {
+    /*
+     * Altijd actuele capaciteit
+     * opnieuw ophalen.
+     */
 
-      toonCapaciteit(
-        result
-      );
-
-    }
-
-    else {
-
-      updateCapacity();
-
-    }
+    await updateCapacity();
 
 
     clearTimeout(
@@ -2145,9 +2318,7 @@ async function manualCheck() {
 
   catch (error) {
 
-    console.error(
-      error
-    );
+    console.error(error);
 
 
     toonFout(
@@ -2176,6 +2347,33 @@ async function manualCheck() {
 
 
 /* =========================================================
+   AUTOMATISCH LOCATIES LADEN BIJ INVOER PERSONEELSNUMMER
+   ========================================================= */
+
+document
+  .getElementById(
+    "manualPersonnel"
+  )
+  .addEventListener(
+    "input",
+    function() {
+
+      clearTimeout(
+        window.manualLocationTimer
+      );
+
+
+      window.manualLocationTimer =
+        setTimeout(
+          laadManualLocaties,
+          350
+        );
+
+    }
+  );
+
+
+/* =========================================================
    UITLOGGEN
    ========================================================= */
 
@@ -2186,34 +2384,9 @@ async function logout() {
   await stopScanner();
 
 
-  if (chauffeurToken) {
-
-    try {
-
-      await apiCall({
-
-        api: "1",
-
-        action: "logout",
-
-        token:
-          chauffeurToken
-
-      });
-
-    }
-
-    catch (e) {
-
-      console.error(e);
-
-    }
-
-  }
-
-
   chauffeurToken =
     "";
+
 
   gekozenBus =
     "";
@@ -2259,7 +2432,7 @@ async function logout() {
 
 
 /* =========================================================
-   AUTOMATISCH PERSONEELSNUMMER CONTROLEREN
+   PAGINA LADEN
    ========================================================= */
 
 window.addEventListener(
@@ -2268,66 +2441,6 @@ window.addEventListener(
 
     console.log(
       "Den Berk Delice buscontrole geladen."
-    );
-
-
-    const personnelInput =
-      document.getElementById(
-        "manualPersonnel"
-      );
-
-
-    if (!personnelInput) {
-      return;
-    }
-
-
-    let zoekTimer = null;
-
-
-    personnelInput.addEventListener(
-      "input",
-      function() {
-
-        clearTimeout(
-          zoekTimer
-        );
-
-
-        const waarde =
-          personnelInput
-            .value
-            .trim();
-
-
-        const locationSelect =
-          document.getElementById(
-            "manualLocation"
-          );
-
-
-        if (!waarde) {
-
-          locationSelect.innerHTML =
-            '<option value="">-- Eerst personeelsnummer ingeven --</option>';
-
-          return;
-        }
-
-
-        /*
-         * Wacht 350 ms zodat we niet
-         * bij elke toetsaanslag een
-         * API-aanvraag sturen.
-         */
-
-        zoekTimer =
-          setTimeout(
-            laadManualLocaties,
-            350
-          );
-
-      }
     );
 
   }
