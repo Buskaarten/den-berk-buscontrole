@@ -116,7 +116,7 @@ button:disabled {
 }
 
 /* =========================================================
-   BUS INFO - ALTIJD BOVENAAN
+   BUS INFO
    ========================================================= */
 
 .busHeader {
@@ -173,30 +173,20 @@ button:disabled {
 }
 
 /* =========================================================
-   SCANRESULTAAT
-   Staat BOVEN de camera
+   RESULTAAT
    ========================================================= */
 
 #status {
   display: none;
-
   width: 100%;
   min-height: 88px;
-
   border-radius: 13px;
-
   margin-bottom: 7px;
-
   padding: 8px 10px;
-
   text-align: center;
-
   font-weight: bold;
-
   box-shadow: 0 3px 10px rgba(0,0,0,0.16);
-
   position: relative;
-
   z-index: 20;
 }
 
@@ -207,11 +197,6 @@ button:disabled {
 
 #status.red {
   background: #dc2626;
-  color: white;
-}
-
-#status.orange {
-  background: #f59e0b;
   color: white;
 }
 
@@ -240,7 +225,6 @@ button:disabled {
   background: white;
   border-radius: 14px;
   padding: 8px;
-
   box-shadow: 0 2px 8px rgba(0,0,0,0.10);
 }
 
@@ -259,7 +243,6 @@ button:disabled {
   background: black;
 }
 
-/* html5-qrcode maakt zelf elementen */
 #reader video {
   border-radius: 10px;
 }
@@ -272,8 +255,15 @@ button:disabled {
   padding: 5px;
 }
 
+#scannerMessage {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-top: 7px;
+}
+
 /* =========================================================
-   BEDIENING - ONDERAAN
+   BEDIENING ONDERAAN
    ========================================================= */
 
 .controls {
@@ -306,31 +296,61 @@ button:disabled {
   background: #555;
 }
 
+.manualButton {
+  background: #2563eb;
+}
+
 .logoutButton {
   background: #b5121b;
 }
 
-#scannerMessage {
-  text-align: center;
-  font-size: 14px;
-  color: #666;
-  margin-top: 7px;
-}
-
 /* =========================================================
-   HULPTEKST
+   HANDMATIGE CONTROLE
    ========================================================= */
 
-.small {
+#manualPanel {
+  display: none;
+  margin-top: 10px;
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.manualTitle {
+  font-size: 18px;
+  font-weight: bold;
   text-align: center;
-  font-size: 12px;
-  color: #777;
-  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.manualInfo {
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.manualButtons {
+  display: flex;
+  gap: 7px;
+}
+
+.manualButtons button {
+  flex: 1;
+  font-size: 15px;
+}
+
+.cancelButton {
+  background: #777;
+}
+
+.checkButton {
+  background: #16803c;
 }
 
 </style>
 </head>
-
 
 <body>
 
@@ -365,8 +385,7 @@ button:disabled {
         id="code"
         inputmode="numeric"
         placeholder="Code"
-        autocomplete="off"
-      >
+        autocomplete="off">
 
       <label for="bus">
         Kies bus
@@ -425,6 +444,7 @@ button:disabled {
     </div>
 
     <!-- BUS -->
+
     <div class="busHeader">
 
       <div style="font-size:12px;">
@@ -441,6 +461,7 @@ button:disabled {
 
 
     <!-- CAPACITEIT -->
+
     <div
       id="capacityBox"
       class="capacityBox">
@@ -457,20 +478,20 @@ button:disabled {
         id="capacityFree"
         class="capacityFree">
 
-        PLAATSEN VRIJ: --
+        0 PLAATSEN VRIJ
 
       </div>
 
       <div
         id="capacityStatus"
         class="capacityStatus">
-
       </div>
 
     </div>
 
 
     <!-- RESULTAAT BOVEN CAMERA -->
+
     <div id="status">
 
       <div
@@ -492,6 +513,7 @@ button:disabled {
 
 
     <!-- CAMERA -->
+
     <div class="scannerCard">
 
       <div class="scannerTitle">
@@ -505,15 +527,17 @@ button:disabled {
         Controleren...
       </div>
 
-      <div
-        id="scannerMessage">
+      <div id="scannerMessage">
         Richt de camera op de QR-code.
       </div>
 
     </div>
 
 
-    <!-- BEDIENING ONDERAAN -->
+    <!-- =================================================
+         BEDIENING ONDERAAN
+         ================================================= -->
+
     <div class="controls">
 
       <div class="controlsTitle">
@@ -535,6 +559,95 @@ button:disabled {
         ■ SCANNER STOPPEN
 
       </button>
+
+
+      <!-- HANDMATIGE CONTROLE -->
+
+      <button
+        class="controlButton manualButton"
+        onclick="openManualPanel()">
+
+        👤 HANDMATIGE CONTROLE
+
+      </button>
+
+
+      <div id="manualPanel">
+
+        <div class="manualTitle">
+          Handmatige controle
+        </div>
+
+        <div class="manualInfo">
+          Gebruik dit alleen wanneer de medewerker
+          zijn buskaart vergeten is.
+        </div>
+
+        <label for="manualPersonnel">
+          Personeelsnummer
+        </label>
+
+        <input
+          id="manualPersonnel"
+          type="text"
+          inputmode="numeric"
+          placeholder="Personeelsnummer"
+          autocomplete="off">
+
+        <label for="manualLocation">
+          Locatie
+        </label>
+
+        <select id="manualLocation">
+
+          <option value="">
+            -- Kies locatie --
+          </option>
+
+          <option value="Den Berk">
+            Den Berk
+          </option>
+
+          <option value="F1">
+            F1
+          </option>
+
+          <option value="F3">
+            F3
+          </option>
+
+          <option value="Rijkevorsel">
+            Rijkevorsel
+          </option>
+
+          <option value="Noorderwijk">
+            Noorderwijk
+          </option>
+
+        </select>
+
+        <div class="manualButtons">
+
+          <button
+            class="cancelButton"
+            onclick="closeManualPanel()">
+
+            ANNULEREN
+
+          </button>
+
+          <button
+            class="checkButton"
+            onclick="manualCheck()">
+
+            CONTROLEREN
+
+          </button>
+
+        </div>
+
+      </div>
+
 
       <button
         class="controlButton logoutButton"
@@ -575,18 +688,12 @@ let capacityTimer = null;
 
 let resultTimer = null;
 
+let audioContext = null;
+
 
 /* =========================================================
    AUDIO
    ========================================================= */
-
-let audioContext = null;
-
-
-/*
- * Audio activeren nadat chauffeur
- * op INLOGGEN drukt.
- */
 
 function initAudio() {
 
@@ -600,7 +707,9 @@ function initAudio() {
 
     }
 
-    if (audioContext.state === "suspended") {
+    if (
+      audioContext.state === "suspended"
+    ) {
 
       audioContext.resume();
 
@@ -610,16 +719,19 @@ function initAudio() {
 
   catch (e) {
 
-    console.log("Audio niet beschikbaar", e);
+    console.log(
+      "Audio niet beschikbaar",
+      e
+    );
 
   }
 
 }
 
 
-/*
- * GROEN GELUID
- */
+/* =========================================================
+   GROEN GELUID
+   ========================================================= */
 
 function speelGroenGeluid() {
 
@@ -649,8 +761,9 @@ function speelGroenGeluid() {
     );
 
     /*
-     * Groen = normaal volume
+     * Groen normaal volume
      */
+
     gain.gain.setValueAtTime(
       0.25,
       now
@@ -684,12 +797,9 @@ function speelGroenGeluid() {
 }
 
 
-/*
- * ROOD GELUID
- *
- * Bewust ongeveer 2x de amplitude
- * van het groene geluid.
- */
+/* =========================================================
+   ROOD GELUID
+   ========================================================= */
 
 function speelRoodGeluid() {
 
@@ -702,7 +812,8 @@ function speelRoodGeluid() {
 
 
     /*
-     * Eerste harde toon
+     * Rood ongeveer 2x zo luid
+     * als groen.
      */
 
     const osc1 =
@@ -741,10 +852,6 @@ function speelRoodGeluid() {
     );
 
 
-    /*
-     * Tweede toon
-     */
-
     const osc2 =
       audioContext.createOscillator();
 
@@ -782,10 +889,6 @@ function speelRoodGeluid() {
       now + 0.59
     );
 
-
-    /*
-     * Trilling indien ondersteund
-     */
 
     if (
       navigator.vibrate
@@ -1047,17 +1150,6 @@ async function login() {
       bus;
 
 
-    localStorage.setItem(
-      "chauffeurToken",
-      chauffeurToken
-    );
-
-    localStorage.setItem(
-      "gekozenBus",
-      gekozenBus
-    );
-
-
     document
       .getElementById("busNaam")
       .textContent =
@@ -1138,15 +1230,12 @@ async function updateCapacity() {
 
 
     if (
-      !result
+      result
     ) {
 
-      return;
+      toonCapaciteit(result);
 
     }
-
-
-    toonCapaciteit(result);
 
   }
 
@@ -1161,10 +1250,6 @@ async function updateCapacity() {
 
 }
 
-
-/*
- * Capaciteit zichtbaar maken
- */
 
 function toonCapaciteit(result) {
 
@@ -1264,11 +1349,6 @@ function toonCapaciteit(result) {
 }
 
 
-/*
- * Capaciteit iedere 3 seconden
- * opnieuw controleren.
- */
-
 function startCapacityTimer() {
 
   stopCapacityTimer();
@@ -1357,9 +1437,11 @@ async function startScanner() {
 
         return {
 
-          width: Math.floor(size),
+          width:
+            Math.floor(size),
 
-          height: Math.floor(size)
+          height:
+            Math.floor(size)
 
         };
 
@@ -1400,7 +1482,6 @@ async function startScanner() {
   catch (error) {
 
     console.error(error);
-
 
     document
       .getElementById(
@@ -1517,10 +1598,6 @@ async function onScanSuccess(
     );
 
 
-    /*
-     * Geluid onmiddellijk afspelen
-     */
-
     if (
       result.toegestaan
     ) {
@@ -1535,11 +1612,6 @@ async function onScanSuccess(
 
     }
 
-
-    /*
-     * Capaciteit onmiddellijk
-     * bijwerken.
-     */
 
     if (
       result.maxPlaatsen !==
@@ -1560,7 +1632,8 @@ async function onScanSuccess(
 
 
     /*
-     * RESULTAAT SLECHTS 1 SECONDE
+     * BELANGRIJK:
+     * groen én rood blijven 3 seconden.
      */
 
     clearTimeout(
@@ -1571,7 +1644,7 @@ async function onScanSuccess(
     resultTimer =
       setTimeout(
         verbergResultaat,
-        1000
+        3000
       );
 
   }
@@ -1579,7 +1652,6 @@ async function onScanSuccess(
   catch (error) {
 
     console.error(error);
-
 
     toonFout(
       "VERBINDINGSPROBLEEM",
@@ -1598,7 +1670,7 @@ async function onScanSuccess(
     resultTimer =
       setTimeout(
         verbergResultaat,
-        1000
+        3000
       );
 
   }
@@ -1612,11 +1684,6 @@ async function onScanSuccess(
       .style.display =
       "none";
 
-
-    /*
-     * Heel korte blokkering tegen
-     * dubbele camera-detectie.
-     */
 
     setTimeout(
       () => {
@@ -1633,24 +1700,20 @@ async function onScanSuccess(
 }
 
 
-/* =========================================================
-   QR MISLUKT
-   ========================================================= */
-
 function onScanFailure(
   errorMessage
 ) {
 
   /*
    * Geen melding.
-   * De scanner blijft continu zoeken.
+   * Scanner blijft zoeken.
    */
 
 }
 
 
 /* =========================================================
-   RESULTAAT TONEN
+   RESULTAAT
    ========================================================= */
 
 function toonResultaat(
@@ -1687,8 +1750,7 @@ function toonResultaat(
 
   status.classList.remove(
     "green",
-    "red",
-    "orange"
+    "red"
   );
 
 
@@ -1772,8 +1834,7 @@ function toonFout(
 
 
   status.classList.remove(
-    "green",
-    "orange"
+    "green"
   );
 
 
@@ -1851,6 +1912,220 @@ function verbergResultaat() {
 
 
 /* =========================================================
+   HANDMATIGE CONTROLE
+   ========================================================= */
+
+function openManualPanel() {
+
+  const panel =
+    document.getElementById(
+      "manualPanel"
+    );
+
+
+  panel.style.display =
+    "block";
+
+
+  document
+    .getElementById(
+      "manualPersonnel"
+    )
+    .focus();
+
+}
+
+
+function closeManualPanel() {
+
+  document
+    .getElementById(
+      "manualPanel"
+    )
+    .style.display =
+    "none";
+
+
+  document
+    .getElementById(
+      "manualPersonnel"
+    )
+    .value =
+    "";
+
+
+  document
+    .getElementById(
+      "manualLocation"
+    )
+    .value =
+    "";
+
+}
+
+
+/*
+ * Handmatige controle.
+ *
+ * We gebruiken dezelfde scanactie,
+ * maar laten de backend zoeken op
+ * personeelsnummer + locatie.
+ *
+ * Als jullie backend hiervoor een
+ * aparte action heeft, kan die hier
+ * later eenvoudig worden gekoppeld.
+ */
+
+async function manualCheck() {
+
+  const personnel =
+    document
+      .getElementById(
+        "manualPersonnel"
+      )
+      .value
+      .trim();
+
+
+  const location =
+    document
+      .getElementById(
+        "manualLocation"
+      )
+      .value;
+
+
+  if (!personnel) {
+
+    alert(
+      "Vul het personeelsnummer in."
+    );
+
+    return;
+
+  }
+
+
+  if (!location) {
+
+    alert(
+      "Kies de locatie."
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    /*
+     * De backend moet voor deze actie
+     * personnel + location ontvangen.
+     */
+
+    const result =
+      await apiCall({
+
+        api: "1",
+
+        action: "manual",
+
+        personnel: personnel,
+
+        locatie: location,
+
+        bus: gekozenBus,
+
+        token: chauffeurToken
+
+      });
+
+
+    toonResultaat(
+      result
+    );
+
+
+    if (
+      result.toegestaan
+    ) {
+
+      speelGroenGeluid();
+
+    }
+
+    else {
+
+      speelRoodGeluid();
+
+    }
+
+
+    if (
+      result.maxPlaatsen !==
+      undefined
+    ) {
+
+      toonCapaciteit(
+        result
+      );
+
+    }
+
+    else {
+
+      updateCapacity();
+
+    }
+
+
+    clearTimeout(
+      resultTimer
+    );
+
+
+    resultTimer =
+      setTimeout(
+        verbergResultaat,
+        3000
+      );
+
+
+    closeManualPanel();
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+    toonFout(
+      "FOUT",
+      "Handmatige controle kon niet worden uitgevoerd."
+    );
+
+
+    speelRoodGeluid();
+
+
+    clearTimeout(
+      resultTimer
+    );
+
+
+    resultTimer =
+      setTimeout(
+        verbergResultaat,
+        3000
+      );
+
+  }
+
+}
+
+
+/* =========================================================
    UITLOGGEN
    ========================================================= */
 
@@ -1866,15 +2141,6 @@ async function logout() {
 
   gekozenBus =
     "";
-
-
-  localStorage.removeItem(
-    "chauffeurToken"
-  );
-
-  localStorage.removeItem(
-    "gekozenBus"
-  );
 
 
   document
@@ -1909,6 +2175,8 @@ async function logout() {
     "";
 
 
+  closeManualPanel();
+
   verbergResultaat();
 
 }
@@ -1922,17 +2190,8 @@ window.addEventListener(
   "load",
   function() {
 
-    /*
-     * Voor deze test altijd opnieuw
-     * chauffeur laten aanmelden.
-     */
-
-    localStorage.removeItem(
-      "chauffeurToken"
-    );
-
-    localStorage.removeItem(
-      "gekozenBus"
+    console.log(
+      "Den Berk Delice buscontrole geladen."
     );
 
   }
