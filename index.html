@@ -601,27 +601,7 @@ button:disabled {
         <select id="manualLocation">
 
           <option value="">
-            -- Kies locatie --
-          </option>
-
-          <option value="Den Berk">
-            Den Berk
-          </option>
-
-          <option value="F1">
-            F1
-          </option>
-
-          <option value="F3">
-            F3
-          </option>
-
-          <option value="Rijkevorsel">
-            Rijkevorsel
-          </option>
-
-          <option value="Noorderwijk">
-            Noorderwijk
+            -- Eerst personeelsnummer ingeven --
           </option>
 
         </select>
@@ -667,390 +647,142 @@ button:disabled {
 <script>
 
 /* =========================================================
-   CONFIGURATIE
+   INSTELLINGEN
    ========================================================= */
 
 const API_URL =
   "https://script.google.com/macros/s/AKfycbyilW3j28SCm-7mch8tgdDkp9RzQsi_J-RsUD3ziFP26LVlJuE06fEbiCpPBVqUQntD4w/exec";
 
-
 let chauffeurToken = "";
-
 let gekozenBus = "";
-
 let scanner = null;
-
 let scannerRunning = false;
-
 let scanBusy = false;
-
+let resultTimer = null;
 let capacityTimer = null;
 
-let resultTimer = null;
-
-let audioContext = null;
-
 
 /* =========================================================
-   AUDIO
-   ========================================================= */
-
-function initAudio() {
-
-  try {
-
-    if (!audioContext) {
-
-      audioContext =
-        new (window.AudioContext ||
-             window.webkitAudioContext)();
-
-    }
-
-    if (
-      audioContext.state === "suspended"
-    ) {
-
-      audioContext.resume();
-
-    }
-
-  }
-
-  catch (e) {
-
-    console.log(
-      "Audio niet beschikbaar",
-      e
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   GROEN GELUID
-   ========================================================= */
-
-function speelGroenGeluid() {
-
-  try {
-
-    initAudio();
-
-    const now =
-      audioContext.currentTime;
-
-    const oscillator =
-      audioContext.createOscillator();
-
-    const gain =
-      audioContext.createGain();
-
-    oscillator.type = "sine";
-
-    oscillator.frequency.setValueAtTime(
-      880,
-      now
-    );
-
-    oscillator.frequency.setValueAtTime(
-      1100,
-      now + 0.10
-    );
-
-    /*
-     * Groen normaal volume
-     */
-
-    gain.gain.setValueAtTime(
-      0.25,
-      now
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-      0.001,
-      now + 0.22
-    );
-
-    oscillator.connect(gain);
-
-    gain.connect(
-      audioContext.destination
-    );
-
-    oscillator.start(now);
-
-    oscillator.stop(
-      now + 0.23
-    );
-
-  }
-
-  catch (e) {
-
-    console.log(e);
-
-  }
-
-}
-
-
-/* =========================================================
-   ROOD GELUID
-   ========================================================= */
-
-function speelRoodGeluid() {
-
-  try {
-
-    initAudio();
-
-    const now =
-      audioContext.currentTime;
-
-
-    /*
-     * Rood ongeveer 2x zo luid
-     * als groen.
-     */
-
-    const osc1 =
-      audioContext.createOscillator();
-
-    const gain1 =
-      audioContext.createGain();
-
-    osc1.type = "square";
-
-    osc1.frequency.setValueAtTime(
-      330,
-      now
-    );
-
-    gain1.gain.setValueAtTime(
-      0.50,
-      now
-    );
-
-    gain1.gain.exponentialRampToValueAtTime(
-      0.001,
-      now + 0.28
-    );
-
-    osc1.connect(gain1);
-
-    gain1.connect(
-      audioContext.destination
-    );
-
-    osc1.start(now);
-
-    osc1.stop(
-      now + 0.29
-    );
-
-
-    const osc2 =
-      audioContext.createOscillator();
-
-    const gain2 =
-      audioContext.createGain();
-
-    osc2.type = "square";
-
-    osc2.frequency.setValueAtTime(
-      220,
-      now + 0.30
-    );
-
-    gain2.gain.setValueAtTime(
-      0.50,
-      now + 0.30
-    );
-
-    gain2.gain.exponentialRampToValueAtTime(
-      0.001,
-      now + 0.58
-    );
-
-    osc2.connect(gain2);
-
-    gain2.connect(
-      audioContext.destination
-    );
-
-    osc2.start(
-      now + 0.30
-    );
-
-    osc2.stop(
-      now + 0.59
-    );
-
-
-    if (
-      navigator.vibrate
-    ) {
-
-      navigator.vibrate([
-        180,
-        80,
-        180
-      ]);
-
-    }
-
-  }
-
-  catch (e) {
-
-    console.log(e);
-
-  }
-
-}
-
-
-/* =========================================================
-   API
+   API CALL
    ========================================================= */
 
 function apiCall(params) {
 
-  return new Promise(
-    (resolve, reject) => {
+  return new Promise(function(resolve, reject) {
 
-      const callbackName =
-        "callback_" +
-        Date.now() +
-        "_" +
-        Math.floor(
-          Math.random() * 100000
+    const callbackName =
+      "jsonpCallback_" +
+      Date.now() +
+      "_" +
+      Math.floor(Math.random() * 100000);
+
+    const script =
+      document.createElement("script");
+
+    let finished = false;
+
+    window[callbackName] =
+      function(data) {
+
+        if (finished) return;
+
+        finished = true;
+
+        try {
+          delete window[callbackName];
+        } catch (e) {}
+
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
+
+        resolve(data);
+      };
+
+    script.onerror =
+      function() {
+
+        if (finished) return;
+
+        finished = true;
+
+        try {
+          delete window[callbackName];
+        } catch (e) {}
+
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
+
+        reject(
+          new Error(
+            "API verbinding mislukt"
+          )
         );
 
+      };
 
-      const script =
-        document.createElement(
-          "script"
-        );
+    const query =
+      new URLSearchParams();
 
+    Object.keys(params).forEach(
+      function(key) {
 
-      const query =
-        new URLSearchParams(
-          params
-        );
+        if (
+          params[key] !== undefined &&
+          params[key] !== null
+        ) {
 
-
-      query.set(
-        "callback",
-        callbackName
-      );
-
-
-      script.src =
-        API_URL +
-        "?" +
-        query.toString();
-
-
-      window[callbackName] =
-        function(data) {
-
-          try {
-
-            resolve(data);
-
-          }
-
-          finally {
-
-            delete window[
-              callbackName
-            ];
-
-            if (
-              script.parentNode
-            ) {
-
-              script.parentNode.removeChild(
-                script
-              );
-
-            }
-
-          }
-
-        };
-
-
-      script.onerror =
-        function() {
-
-          delete window[
-            callbackName
-          ];
-
-          if (
-            script.parentNode
-          ) {
-
-            script.parentNode.removeChild(
-              script
-            );
-
-          }
-
-          reject(
-            new Error(
-              "Kan server niet bereiken."
-            )
+          query.append(
+            key,
+            params[key]
           );
 
-        };
+        }
 
+      }
+    );
 
-      document.body.appendChild(
-        script
-      );
+    query.append(
+      "callback",
+      callbackName
+    );
 
+    script.src =
+      API_URL +
+      "?" +
+      query.toString();
 
-      setTimeout(
-        () => {
+    document.body.appendChild(
+      script
+    );
 
-          if (
-            window[callbackName]
-          ) {
+    setTimeout(
+      function() {
 
-            delete window[
-              callbackName
-            ];
+        if (finished) return;
 
-            if (
-              script.parentNode
-            ) {
+        finished = true;
 
-              script.parentNode.removeChild(
-                script
-              );
+        try {
+          delete window[callbackName];
+        } catch (e) {}
 
-            }
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
 
-            reject(
-              new Error(
-                "Server reageert niet."
-              )
-            );
+        reject(
+          new Error(
+            "Timeout bij API"
+          )
+        );
 
-          }
+      },
+      15000
+    );
 
-        },
-        15000
-      );
-
-    }
-  );
+  });
 
 }
 
@@ -1061,24 +793,24 @@ function apiCall(params) {
 
 async function login() {
 
-  initAudio();
-
   const code =
     document
       .getElementById("code")
       .value
       .trim();
 
-
   const bus =
     document
       .getElementById("bus")
       .value;
 
-
   const error =
     document
       .getElementById("loginError");
+
+  const button =
+    document
+      .getElementById("loginButton");
 
 
   error.textContent = "";
@@ -1104,15 +836,10 @@ async function login() {
   }
 
 
-  const button =
-    document
-      .getElementById("loginButton");
-
-
   button.disabled = true;
 
   button.textContent =
-    "INLOGGEN...";
+    "AANMELDEN...";
 
 
   try {
@@ -1124,55 +851,70 @@ async function login() {
 
         action: "login",
 
-        code: code
+        code: code,
+
+        bus: bus
 
       });
 
 
     if (
-      !result.toegestaan
+      result &&
+      result.toegestaan
     ) {
 
-      error.textContent =
-        result.melding ||
-        result.reden ||
-        "Inloggen mislukt.";
+      chauffeurToken =
+        result.token || "";
 
-      return;
+      gekozenBus =
+        result.bus || bus;
+
+
+      document
+        .getElementById(
+          "loginPage"
+        )
+        .style.display =
+        "none";
+
+
+      document
+        .getElementById(
+          "scannerPage"
+        )
+        .style.display =
+        "block";
+
+
+      document
+        .getElementById(
+          "busNaam"
+        )
+        .textContent =
+        gekozenBus;
+
+
+      await updateCapacity();
+
+      startCapacityTimer();
+
+      startScanner();
 
     }
 
+    else {
 
-    chauffeurToken =
-      result.token;
+      error.textContent =
+        (
+          result &&
+          (
+            result.reden ||
+            result.message
+          )
+        ) ||
+        "Aanmelden mislukt.";
 
-    gekozenBus =
-      bus;
-
-
-    document
-      .getElementById("busNaam")
-      .textContent =
-      gekozenBus;
-
-
-    document
-      .getElementById("loginPage")
-      .style.display =
-      "none";
-
-
-    document
-      .getElementById("scannerPage")
-      .style.display =
-      "block";
-
-
-    await updateCapacity();
-
-    startScanner();
-
-    startCapacityTimer();
+    }
 
   }
 
@@ -1181,7 +923,7 @@ async function login() {
     console.error(e);
 
     error.textContent =
-      "Verbinding met de buscontrole mislukt.";
+      "Aanmelden mislukt. Controleer de verbinding.";
 
   }
 
@@ -1203,15 +945,9 @@ async function login() {
 
 async function updateCapacity() {
 
-  if (
-    !gekozenBus ||
-    !chauffeurToken
-  ) {
-
+  if (!gekozenBus || !chauffeurToken) {
     return;
-
   }
-
 
   try {
 
@@ -1230,20 +966,23 @@ async function updateCapacity() {
 
 
     if (
-      result
+      result &&
+      result.ok
     ) {
 
-      toonCapaciteit(result);
+      toonCapaciteit(
+        result
+      );
 
     }
 
   }
 
-  catch (e) {
+  catch (error) {
 
-    console.log(
-      "Capaciteit ophalen mislukt",
-      e
+    console.error(
+      "Capaciteit:",
+      error
     );
 
   }
@@ -1251,22 +990,47 @@ async function updateCapacity() {
 }
 
 
-function toonCapaciteit(result) {
+function toonCapaciteit(
+  result
+) {
+
+  const max =
+    Number(
+      result.maxPlaatsen || 0
+    );
+
+  const aantal =
+    Number(
+      result.aantalGeslaagd ||
+      result.aantal ||
+      result.gescand ||
+      0
+    );
+
+  const vrij =
+    Math.max(
+      0,
+      max - aantal
+    );
+
 
   const box =
     document.getElementById(
       "capacityBox"
     );
 
+
   const main =
     document.getElementById(
       "capacityMain"
     );
 
+
   const free =
     document.getElementById(
       "capacityFree"
     );
+
 
   const status =
     document.getElementById(
@@ -1274,26 +1038,8 @@ function toonCapaciteit(result) {
     );
 
 
-  const gebruikt =
-    Number(
-      result.gebruiktePlaatsen || 0
-    );
-
-
-  const max =
-    Number(
-      result.maxPlaatsen || 0
-    );
-
-
-  const vrij =
-    Number(
-      result.vrijePlaatsen || 0
-    );
-
-
   main.textContent =
-    gebruikt +
+    aantal +
     " / " +
     max +
     " GESCAND";
@@ -1304,11 +1050,6 @@ function toonCapaciteit(result) {
     " PLAATSEN VRIJ";
 
 
-  status.textContent =
-    result.capaciteitsStatus ||
-    "";
-
-
   box.classList.remove(
     "capacityNormal",
     "capacityWarning",
@@ -1316,25 +1057,27 @@ function toonCapaciteit(result) {
   );
 
 
-  if (
-    result.capaciteitsStatus ===
-    "BUS VOL"
-  ) {
+  if (vrij <= 0) {
 
     box.classList.add(
       "capacityFull"
     );
 
+    status.textContent =
+      "🛑 BUS VOL";
+
   }
 
-  else if (
-    result.capaciteitsStatus ===
-    "LAATSTE PLAATSEN"
-  ) {
+  else if (vrij <= 10) {
 
     box.classList.add(
       "capacityWarning"
     );
+
+    status.textContent =
+      "⚠️ NOG " +
+      vrij +
+      " PLAATSEN";
 
   }
 
@@ -1343,6 +1086,9 @@ function toonCapaciteit(result) {
     box.classList.add(
       "capacityNormal"
     );
+
+    status.textContent =
+      "";
 
   }
 
@@ -1356,7 +1102,7 @@ function startCapacityTimer() {
   capacityTimer =
     setInterval(
       updateCapacity,
-      3000
+      10000
     );
 
 }
@@ -1364,9 +1110,7 @@ function startCapacityTimer() {
 
 function stopCapacityTimer() {
 
-  if (
-    capacityTimer
-  ) {
+  if (capacityTimer) {
 
     clearInterval(
       capacityTimer
@@ -1385,70 +1129,22 @@ function stopCapacityTimer() {
 
 async function startScanner() {
 
-  if (
-    scannerRunning
-  ) {
-
+  if (scannerRunning) {
     return;
-
   }
 
 
-  if (
-    !gekozenBus ||
-    !chauffeurToken
-  ) {
-
-    return;
-
-  }
-
-
-  try {
-
-    document
-      .getElementById(
-        "scannerMessage"
-      )
-      .textContent =
-      "Camera starten...";
-
+  if (!scanner) {
 
     scanner =
       new Html5Qrcode(
         "reader"
       );
 
+  }
 
-    const config = {
 
-      fps: 12,
-
-      qrbox: function(
-        viewfinderWidth,
-        viewfinderHeight
-      ) {
-
-        const size =
-          Math.min(
-            viewfinderWidth,
-            viewfinderHeight
-          ) * 0.72;
-
-        return {
-
-          width:
-            Math.floor(size),
-
-          height:
-            Math.floor(size)
-
-        };
-
-      }
-
-    };
-
+  try {
 
     await scanner.start(
 
@@ -1457,7 +1153,32 @@ async function startScanner() {
           "environment"
       },
 
-      config,
+      {
+        fps: 12,
+
+        qrbox:
+          function(
+            width,
+            height
+          ) {
+
+            const size =
+              Math.min(
+                width,
+                height
+              ) * 0.72;
+
+            return {
+              width: size,
+              height: size
+            };
+
+          },
+
+        aspectRatio:
+          1.0
+
+      },
 
       onScanSuccess,
 
@@ -1475,21 +1196,24 @@ async function startScanner() {
         "scannerMessage"
       )
       .textContent =
-      "Scanner actief – richt op de QR-code.";
+      "Scanner actief — scan de buskaart.";
+
 
   }
 
   catch (error) {
 
-    console.error(error);
+    console.error(
+      error
+    );
+
 
     document
       .getElementById(
         "scannerMessage"
       )
-      .innerHTML =
-      "🔴 CAMERA KAN NIET STARTEN<br>" +
-      "Geef toestemming voor de camera.";
+      .textContent =
+      "Camera kon niet worden gestart. Geef cameratoegang.";
 
   }
 
@@ -1502,40 +1226,35 @@ async function startScanner() {
 
 async function stopScanner() {
 
-  try {
+  if (
+    !scanner ||
+    !scannerRunning
+  ) {
 
-    if (
-      scanner &&
-      scannerRunning
-    ) {
-
-      await scanner.stop();
-
-      scanner.clear();
-
-    }
+    return;
 
   }
 
-  catch (e) {
 
-    console.log(e);
+  try {
+
+    await scanner.stop();
+
+    scanner.clear();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      error
+    );
 
   }
 
 
   scannerRunning =
     false;
-
-  scanner = null;
-
-
-  document
-    .getElementById(
-      "scannerMessage"
-    )
-    .textContent =
-    "Scanner gestopt.";
 
 }
 
@@ -1548,23 +1267,24 @@ async function onScanSuccess(
   decodedText
 ) {
 
-  if (
-    scanBusy
-  ) {
-
+  if (scanBusy) {
     return;
+  }
 
+
+  const badgeId =
+    String(
+      decodedText || ""
+    ).trim();
+
+
+  if (!badgeId) {
+    return;
   }
 
 
   scanBusy =
     true;
-
-
-  const badgeId =
-    String(
-      decodedText
-    ).trim();
 
 
   document
@@ -1631,11 +1351,6 @@ async function onScanSuccess(
     }
 
 
-    /*
-     * BELANGRIJK:
-     * groen én rood blijven 3 seconden.
-     */
-
     clearTimeout(
       resultTimer
     );
@@ -1686,7 +1401,7 @@ async function onScanSuccess(
 
 
     setTimeout(
-      () => {
+      function() {
 
         scanBusy =
           false;
@@ -1912,6 +1627,184 @@ function verbergResultaat() {
 
 
 /* =========================================================
+   GELUIDEN
+   ========================================================= */
+
+function speelGroenGeluid() {
+
+  try {
+
+    const AudioContext =
+      window.AudioContext ||
+      window.webkitAudioContext;
+
+    if (!AudioContext) {
+      return;
+    }
+
+
+    const ctx =
+      new AudioContext();
+
+
+    const oscillator =
+      ctx.createOscillator();
+
+
+    const gain =
+      ctx.createGain();
+
+
+    oscillator.type =
+      "sine";
+
+
+    oscillator.frequency.value =
+      880;
+
+
+    gain.gain.setValueAtTime(
+      0.28,
+      ctx.currentTime
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.001,
+      ctx.currentTime + 0.35
+    );
+
+
+    oscillator.connect(
+      gain
+    );
+
+
+    gain.connect(
+      ctx.destination
+    );
+
+
+    oscillator.start();
+
+    oscillator.stop(
+      ctx.currentTime + 0.35
+    );
+
+  }
+
+  catch (e) {
+
+    console.error(e);
+
+  }
+
+}
+
+
+function speelRoodGeluid() {
+
+  try {
+
+    const AudioContext =
+      window.AudioContext ||
+      window.webkitAudioContext;
+
+    if (!AudioContext) {
+      return;
+    }
+
+
+    const ctx =
+      new AudioContext();
+
+
+    /*
+     * Rood = ongeveer dubbel zo luid
+     * als groen.
+     */
+
+    function beep(
+      frequency,
+      startTime,
+      duration
+    ) {
+
+      const oscillator =
+        ctx.createOscillator();
+
+
+      const gain =
+        ctx.createGain();
+
+
+      oscillator.type =
+        "square";
+
+
+      oscillator.frequency.value =
+        frequency;
+
+
+      gain.gain.setValueAtTime(
+        0.55,
+        startTime
+      );
+
+
+      gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        startTime + duration
+      );
+
+
+      oscillator.connect(
+        gain
+      );
+
+
+      gain.connect(
+        ctx.destination
+      );
+
+
+      oscillator.start(
+        startTime
+      );
+
+
+      oscillator.stop(
+        startTime + duration
+      );
+
+    }
+
+
+    beep(
+      420,
+      ctx.currentTime,
+      0.22
+    );
+
+
+    beep(
+      300,
+      ctx.currentTime + 0.25,
+      0.30
+    );
+
+  }
+
+  catch (e) {
+
+    console.error(e);
+
+  }
+
+}
+
+
+/* =========================================================
    HANDMATIGE CONTROLE
    ========================================================= */
 
@@ -1925,6 +1818,22 @@ function openManualPanel() {
 
   panel.style.display =
     "block";
+
+
+  document
+    .getElementById(
+      "manualPersonnel"
+    )
+    .value =
+    "";
+
+
+  document
+    .getElementById(
+      "manualLocation"
+    )
+    .innerHTML =
+    '<option value="">-- Eerst personeelsnummer ingeven --</option>';
 
 
   document
@@ -1958,23 +1867,208 @@ function closeManualPanel() {
     .getElementById(
       "manualLocation"
     )
-    .value =
-    "";
+    .innerHTML =
+    '<option value="">-- Eerst personeelsnummer ingeven --</option>';
 
 }
 
 
-/*
- * Handmatige controle.
- *
- * We gebruiken dezelfde scanactie,
- * maar laten de backend zoeken op
- * personeelsnummer + locatie.
- *
- * Als jullie backend hiervoor een
- * aparte action heeft, kan die hier
- * later eenvoudig worden gekoppeld.
- */
+/* =========================================================
+   LOCATIES OPHALEN OP BASIS VAN PERSONEELSNUMMER
+   ========================================================= */
+
+async function laadManualLocaties() {
+
+  const personnel =
+    document
+      .getElementById(
+        "manualPersonnel"
+      )
+      .value
+      .trim();
+
+
+  const select =
+    document
+      .getElementById(
+        "manualLocation"
+      );
+
+
+  if (!personnel) {
+
+    select.innerHTML =
+      '<option value="">-- Eerst personeelsnummer ingeven --</option>';
+
+    return;
+
+  }
+
+
+  select.innerHTML =
+    '<option value="">Locaties zoeken...</option>';
+
+
+  try {
+
+    const result =
+      await apiCall({
+
+        api: "1",
+
+        action: "findEmployee",
+
+        personeelsnummer:
+          personnel,
+
+        token:
+          chauffeurToken
+
+      });
+
+
+    if (!result.ok) {
+
+      select.innerHTML =
+        '<option value="">Geen medewerker gevonden</option>';
+
+      return;
+
+    }
+
+
+    const medewerkers =
+      result.medewerkers ||
+      result.employees ||
+      result.items ||
+      [];
+
+
+    const locaties = [];
+
+
+    medewerkers.forEach(
+      function(medewerker) {
+
+        const locatie =
+          String(
+            medewerker.locatie ||
+            medewerker.location ||
+            ""
+          ).trim();
+
+
+        if (
+          locatie &&
+          !locaties.some(
+            function(bestaande) {
+
+              return (
+                bestaande.toUpperCase() ===
+                locatie.toUpperCase()
+              );
+
+            }
+          )
+        ) {
+
+          locaties.push(
+            locatie
+          );
+
+        }
+
+      }
+    );
+
+
+    select.innerHTML =
+      "";
+
+
+    if (!locaties.length) {
+
+      select.innerHTML =
+        '<option value="">Geen locatie gevonden</option>';
+
+      return;
+
+    }
+
+
+    const eerste =
+      document.createElement(
+        "option"
+      );
+
+
+    eerste.value =
+      "";
+
+
+    eerste.textContent =
+      "-- Kies locatie --";
+
+
+    select.appendChild(
+      eerste
+    );
+
+
+    locaties.forEach(
+      function(locatie) {
+
+        const option =
+          document.createElement(
+            "option"
+          );
+
+
+        option.value =
+          locatie;
+
+
+        option.textContent =
+          locatie;
+
+
+        select.appendChild(
+          option
+        );
+
+      }
+    );
+
+
+    if (
+      locaties.length === 1
+    ) {
+
+      select.value =
+        locaties[0];
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      error
+    );
+
+
+    select.innerHTML =
+      '<option value="">Fout bij ophalen locatie</option>';
+
+  }
+
+}
+
+
+/* =========================================================
+   HANDMATIGE CONTROLE UITVOEREN
+   ========================================================= */
 
 async function manualCheck() {
 
@@ -1992,7 +2086,8 @@ async function manualCheck() {
       .getElementById(
         "manualLocation"
       )
-      .value;
+      .value
+      .trim();
 
 
   if (!personnel) {
@@ -2008,8 +2103,11 @@ async function manualCheck() {
 
   if (!location) {
 
+    await laadManualLocaties();
+
+
     alert(
-      "Kies de locatie."
+      "Kies de juiste locatie."
     );
 
     return;
@@ -2019,11 +2117,6 @@ async function manualCheck() {
 
   try {
 
-    /*
-     * De backend moet voor deze actie
-     * personnel + location ontvangen.
-     */
-
     const result =
       await apiCall({
 
@@ -2031,13 +2124,23 @@ async function manualCheck() {
 
         action: "manual",
 
-        personnel: personnel,
+        /*
+         * BELANGRIJK:
+         * Backend verwacht
+         * personeelsnummer.
+         */
 
-        locatie: location,
+        personeelsnummer:
+          personnel,
 
-        bus: gekozenBus,
+        locatie:
+          location,
 
-        token: chauffeurToken
+        bus:
+          gekozenBus,
+
+        token:
+          chauffeurToken
 
       });
 
@@ -2098,7 +2201,10 @@ async function manualCheck() {
 
   catch (error) {
 
-    console.error(error);
+    console.error(
+      error
+    );
+
 
     toonFout(
       "FOUT",
@@ -2133,11 +2239,39 @@ async function logout() {
 
   stopCapacityTimer();
 
+
   await stopScanner();
+
+
+  if (chauffeurToken) {
+
+    try {
+
+      await apiCall({
+
+        api: "1",
+
+        action: "logout",
+
+        token:
+          chauffeurToken
+
+      });
+
+    }
+
+    catch (e) {
+
+      console.error(e);
+
+    }
+
+  }
 
 
   chauffeurToken =
     "";
+
 
   gekozenBus =
     "";
@@ -2177,6 +2311,7 @@ async function logout() {
 
   closeManualPanel();
 
+
   verbergResultaat();
 
 }
@@ -2193,6 +2328,61 @@ window.addEventListener(
     console.log(
       "Den Berk Delice buscontrole geladen."
     );
+
+
+    const personnelInput =
+      document.getElementById(
+        "manualPersonnel"
+      );
+
+
+    if (personnelInput) {
+
+      let zoekTimer =
+        null;
+
+
+      personnelInput.addEventListener(
+        "input",
+        function() {
+
+          clearTimeout(
+            zoekTimer
+          );
+
+
+          const waarde =
+            personnelInput
+              .value
+              .trim();
+
+
+          const locationSelect =
+            document.getElementById(
+              "manualLocation"
+            );
+
+
+          if (!waarde) {
+
+            locationSelect.innerHTML =
+              '<option value="">-- Eerst personeelsnummer ingeven --</option>';
+
+            return;
+
+          }
+
+
+          zoekTimer =
+            setTimeout(
+              laadManualLocaties,
+              350
+            );
+
+        }
+      );
+
+    }
 
   }
 );
