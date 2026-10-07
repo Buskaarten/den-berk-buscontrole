@@ -2,1071 +2,939 @@
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
+
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0,
-      maximum-scale=1.0, user-scalable=no">
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
 
 <title>Den Berk Delice - Buscontrole</title>
 
-<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<script src="https://unpkg.com/html5-qrcode"
+        type="text/javascript"></script>
 
 <style>
-:root {
-  --green: #1b8f3a;
-  --green-dark: #116b2a;
-  --red: #d71920;
-  --orange: #f39c12;
-  --blue: #1976d2;
-  --dark: #202124;
-  --gray: #f1f3f4;
-  --border: #d9d9d9;
-  --white: #ffffff;
-}
 
 * {
   box-sizing: border-box;
 }
 
+:root {
+  --green: #159447;
+  --green-dark: #08752f;
+  --green-light: #dff5e5;
+
+  --red: #d71920;
+  --red-dark: #a90008;
+  --red-light: #ffe1e1;
+
+  --orange: #f39c12;
+  --orange-light: #fff1d5;
+
+  --dark: #202124;
+  --grey: #6b7280;
+  --light: #f3f5f4;
+  --white: #ffffff;
+  --border: #d9dddd;
+}
+
+html,
 body {
   margin: 0;
   padding: 0;
+  width: 100%;
+  min-height: 100%;
   font-family: Arial, Helvetica, sans-serif;
-  background: #f4f6f7;
+  background: #eef2ef;
   color: var(--dark);
+}
+
+body {
+  overscroll-behavior: none;
 }
 
 button,
 input,
 select {
-  font-family: inherit;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 button {
-  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
+
+.container {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
 
 .header {
   background: var(--green);
   color: white;
-  padding: 14px 18px;
+  border-radius: 15px;
+  padding: 10px 12px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  box-shadow: 0 3px 10px rgba(0,0,0,.16);
+  margin-bottom: 9px;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .logo-box {
+  width: 44px;
+  height: 44px;
   background: white;
   color: var(--green);
   border-radius: 10px;
-  font-weight: bold;
-  padding: 7px 10px;
-  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 17px;
 }
 
-.header-title {
-  font-size: 20px;
-  font-weight: bold;
+.company {
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.05;
 }
 
-.header-subtitle {
-  font-size: 12px;
-  opacity: 0.9;
+.company-sub {
+  font-size: 11px;
+  margin-top: 3px;
+  opacity: .95;
 }
 
-.session {
-  font-size: 12px;
+.login-status {
   text-align: right;
+  font-size: 11px;
+  font-weight: bold;
 }
 
-.container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 15px;
+.logout-small {
+  margin-top: 5px;
+  background: #666;
+  color: white;
+  border: 0;
+  border-radius: 9px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: bold;
 }
 
-.card {
+/* ============================================================
+   LOGIN
+   ============================================================ */
+
+#loginPage {
+  display: block;
+}
+
+#scannerPage {
+  display: none;
+}
+
+.login-card {
   background: white;
-  border-radius: 14px;
-  padding: 16px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 3px 12px rgba(0,0,0,.12);
 }
 
-.card h2 {
-  margin: 0 0 12px 0;
-  font-size: 19px;
-}
-
-.card h3 {
-  margin: 0 0 10px 0;
-  font-size: 16px;
-}
-
-.hidden {
-  display: none !important;
+.login-title {
+  text-align: center;
+  margin: 0 0 16px 0;
+  font-size: 24px;
 }
 
 label {
   display: block;
+  font-size: 15px;
   font-weight: bold;
-  margin-bottom: 6px;
+  margin: 12px 0 6px;
 }
 
 input,
 select {
   width: 100%;
-  padding: 13px;
+  height: 54px;
   border: 1px solid #bbb;
-  border-radius: 9px;
-  font-size: 17px;
+  border-radius: 11px;
   background: white;
+  padding: 10px 12px;
+  font-size: 19px;
 }
 
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.form-group {
-  margin-bottom: 10px;
-}
-
-.btn {
-  border: 0;
-  border-radius: 9px;
-  padding: 13px 16px;
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
+.primary-button {
   width: 100%;
-  min-height: 48px;
-}
-
-.btn-green {
+  min-height: 54px;
+  margin-top: 16px;
+  border: 0;
+  border-radius: 11px;
   background: var(--green);
+  color: white;
+  font-size: 19px;
+  font-weight: 800;
 }
 
-.btn-green:hover {
-  background: var(--green-dark);
+.primary-button:active {
+  transform: scale(.98);
 }
 
-.btn-blue {
-  background: var(--blue);
+.primary-button:disabled {
+  background: #aaa;
 }
 
-.btn-red {
-  background: var(--red);
-}
-
-.btn-orange {
-  background: var(--orange);
-  color: #111;
-}
-
-.btn-gray {
-  background: #666;
-}
-
-.btn-small {
-  width: auto;
-  min-height: 40px;
-  padding: 9px 13px;
-  font-size: 14px;
-}
-
-.login-box {
-  max-width: 500px;
-  margin: 30px auto;
-}
-
-.login-icon {
-  font-size: 60px;
+.login-error {
+  color: var(--red);
   text-align: center;
-  margin-bottom: 10px;
-}
-
-.login-title {
-  text-align: center;
-  font-size: 25px;
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-top: 12px;
 }
 
-.login-text {
+.login-info {
   text-align: center;
-  color: #666;
-  margin-bottom: 20px;
+  color: var(--grey);
+  font-size: 12px;
+  margin-top: 15px;
 }
 
-.bus-buttons {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-}
+/* ============================================================
+   BUS INFO
+   ============================================================ */
 
-.bus-button {
-  border: 2px solid #ccc;
+.bus-top {
   background: white;
-  border-radius: 10px;
-  padding: 12px 5px;
-  font-size: 17px;
-  font-weight: bold;
-  min-height: 60px;
+  border-radius: 14px;
+  padding: 9px 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.10);
+  margin-bottom: 8px;
 }
 
-.bus-button.active {
-  background: var(--green);
-  color: white;
-  border-color: var(--green);
-}
-
-.bus-button.bus-full {
-  background: var(--red);
-  color: white;
-  border-color: var(--red);
-}
-
-.bus-button.bus-warning {
-  background: var(--orange);
-  color: #111;
-  border-color: var(--orange);
-}
-
-.capacity-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+.bus-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 8px;
 }
+
+.bus-name {
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.bus-state {
+  font-size: 12px;
+  font-weight: bold;
+  padding: 5px 9px;
+  border-radius: 20px;
+  background: var(--green-light);
+  color: var(--green-dark);
+}
+
+/* ============================================================
+   CAPACITY - DIRECT BIJ SCANNER
+   ============================================================ */
 
 .capacity-card {
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px;
-  text-align: center;
-  background: #fafafa;
-}
-
-.capacity-bus {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.capacity-number {
-  font-size: 29px;
-  font-weight: bold;
-  margin: 5px 0;
-}
-
-.capacity-text {
-  font-size: 12px;
-  color: #555;
+  background: var(--green-light);
+  border: 3px solid var(--green);
+  border-radius: 15px;
+  padding: 9px 11px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.10);
 }
 
 .capacity-card.warning {
-  background: #fff2d8;
+  background: var(--orange-light);
   border-color: var(--orange);
 }
 
 .capacity-card.full {
-  background: #ffe0e0;
+  background: var(--red-light);
   border-color: var(--red);
-  color: var(--red);
 }
 
-.capacity-card.ok {
-  background: #e8f7ec;
-  border-color: var(--green);
+.capacity-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
-.scanner-wrapper {
-  max-width: 520px;
-  margin: 0 auto;
+.capacity-count {
+  font-size: 25px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.capacity-free {
+  text-align: right;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.capacity-free strong {
+  font-size: 22px;
+}
+
+.capacity-label {
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold;
+  margin-top: 4px;
+  opacity: .85;
+}
+
+.capacity-bar {
+  height: 8px;
+  width: 100%;
+  background: #d5ddd7;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 7px;
+}
+
+.capacity-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--green);
+  border-radius: 10px;
+  transition: width .3s ease;
+}
+
+.capacity-card.warning .capacity-fill {
+  background: var(--orange);
+}
+
+.capacity-card.full .capacity-fill {
+  background: var(--red);
+}
+
+.capacity-status {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 900;
+  margin-top: 5px;
+}
+
+/* ============================================================
+   SCANNER CARD
+   ============================================================ */
+
+.scanner-card {
+  background: white;
+  border-radius: 15px;
+  padding: 9px;
+  box-shadow: 0 3px 12px rgba(0,0,0,.12);
+}
+
+.scanner-title {
+  text-align: center;
+  margin: 2px 0 6px;
+  font-size: 17px;
+  font-weight: 900;
 }
 
 #reader {
   width: 100%;
-  min-height: 300px;
-  border: 3px solid #222;
-  border-radius: 14px;
+  border-radius: 12px;
   overflow: hidden;
   background: #111;
 }
 
-.scan-controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 10px;
+/*
+  De scanner compact houden zodat capaciteit + resultaat
+  op het iPhone-scherm zichtbaar blijven.
+*/
+
+#reader video {
+  width: 100% !important;
+  max-height: 275px !important;
+  object-fit: cover !important;
 }
 
-.scan-result {
-  margin-top: 14px;
-  border-radius: 14px;
-  padding: 20px;
+#reader__dashboard_section_csr {
+  display: none !important;
+}
+
+#reader__dashboard_section_swaplink {
+  display: none !important;
+}
+
+.camera-help {
+  text-align: center;
+  font-size: 11px;
+  color: var(--grey);
+  padding: 5px 4px 3px;
+}
+
+/* ============================================================
+   RESULTAAT DIRECT ONDER SCANNER
+   ============================================================ */
+
+.status {
+  width: 100%;
+  border-radius: 15px;
+  padding: 11px;
+  margin-top: 7px;
   text-align: center;
   display: none;
+  box-shadow: 0 3px 10px rgba(0,0,0,.15);
 }
 
-.scan-result.green {
-  display: block;
-  background: #dff5e4;
+.status.green {
+  background: var(--green-light);
   border: 4px solid var(--green);
-  color: #125b25;
+  color: #075c25;
 }
 
-.scan-result.red {
-  display: block;
-  background: #ffe1e1;
+.status.red {
+  background: var(--red-light);
   border: 4px solid var(--red);
-  color: #8d1015;
+  color: #9b0007;
 }
 
-.result-icon {
-  font-size: 55px;
+.status.warning {
+  background: var(--orange-light);
+  border: 4px solid var(--orange);
+  color: #8a5400;
+}
+
+.status-icon {
+  font-size: 35px;
   line-height: 1;
 }
 
-.result-status {
-  font-size: 28px;
-  font-weight: bold;
-  margin-top: 8px;
+.status-big {
+  font-size: 25px;
+  font-weight: 900;
+  margin-top: 2px;
 }
 
-.result-name {
+.status-name {
   font-size: 21px;
-  font-weight: bold;
-  margin-top: 10px;
+  font-weight: 900;
+  margin-top: 4px;
 }
 
-.result-info {
-  margin-top: 8px;
-  font-size: 16px;
+.status-location {
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 3px;
 }
 
-.capacity-result {
-  margin-top: 10px;
-  font-size: 17px;
-  font-weight: bold;
+.status-reason {
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 4px;
 }
 
-.status-message {
-  padding: 10px;
-  border-radius: 8px;
-  margin-top: 10px;
-  display: none;
+.status-capacity {
+  font-size: 13px;
+  font-weight: 900;
+  margin-top: 5px;
 }
 
-.status-message.show {
-  display: block;
-}
+/* ============================================================
+   SCAN CONTROL
+   ============================================================ */
 
-.status-message.error {
-  background: #ffe1e1;
-  color: #8d1015;
-}
-
-.status-message.success {
-  background: #dff5e4;
-  color: #125b25;
-}
-
-.status-message.info {
-  background: #e6f0ff;
-  color: #174f91;
-}
-
-.manual-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.manual-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.employee-choice {
-  margin-top: 10px;
-  border: 2px solid var(--orange);
-  border-radius: 10px;
-  padding: 12px;
-  background: #fff9eb;
-}
-
-.employee-option {
-  padding: 11px;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+.controls {
+  display: flex;
+  gap: 7px;
   margin-top: 7px;
-  cursor: pointer;
 }
 
-.employee-option:hover {
-  background: #eef8f0;
+.control-button {
+  flex: 1;
+  min-height: 42px;
+  border: 0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 900;
 }
 
-.switch-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+.start-button {
+  background: var(--green);
+  color: white;
 }
 
-.switch-result {
-  margin-top: 10px;
+.stop-button {
+  background: #666;
+  color: white;
 }
 
-.tools-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+.control-button:disabled {
+  opacity: .5;
 }
 
-.small-note {
-  font-size: 12px;
-  color: #666;
-  margin-top: 6px;
-}
+/* ============================================================
+   LOADING
+   ============================================================ */
 
 .loading {
-  opacity: .65;
-  pointer-events: none;
-}
-
-.divider {
-  height: 1px;
-  background: #ddd;
-  margin: 16px 0;
-}
-
-.top-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-}
-
-.scanning-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 13px;
-  color: #555;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--green);
-  animation: pulse 1.2s infinite;
-}
-
-@keyframes pulse {
-  0% { opacity: .3; }
-  50% { opacity: 1; }
-  100% { opacity: .3; }
-}
-
-.footer {
+  display: none;
   text-align: center;
-  color: #777;
-  font-size: 11px;
-  padding: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 5px;
+  color: var(--grey);
 }
 
-@media (max-width: 650px) {
+/* ============================================================
+   ERROR
+   ============================================================ */
+
+.error {
+  color: var(--red);
+  text-align: center;
+  font-weight: 900;
+  padding: 12px;
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 430px) {
+
+  .container {
+    padding: 7px;
+  }
 
   .header {
-    padding: 10px;
+    margin-bottom: 6px;
+    padding: 8px 9px;
   }
 
-  .header-title {
-    font-size: 16px;
+  .logo-box {
+    width: 39px;
+    height: 39px;
+    font-size: 15px;
   }
 
-  .header-subtitle {
+  .company {
+    font-size: 15px;
+  }
+
+  .company-sub {
     font-size: 10px;
   }
 
-  .container {
-    padding: 9px;
+  .bus-name {
+    font-size: 20px;
   }
 
-  .card {
-    padding: 12px;
-    border-radius: 11px;
+  .capacity-count {
+    font-size: 23px;
   }
 
-  .form-row,
-  .manual-grid,
-  .switch-grid {
-    grid-template-columns: 1fr;
+  .capacity-free {
+    font-size: 12px;
   }
 
-  .bus-buttons {
-    grid-template-columns: repeat(2, 1fr);
+  .capacity-free strong {
+    font-size: 20px;
   }
 
-  .capacity-grid {
-    grid-template-columns: repeat(2, 1fr);
+  #reader video {
+    max-height: 250px !important;
   }
 
-  .tools-grid {
-    grid-template-columns: 1fr;
+  .status-big {
+    font-size: 23px;
   }
 
-  .manual-actions {
-    grid-template-columns: 1fr;
+  .status-name {
+    font-size: 19px;
   }
 
-  #reader {
-    min-height: 270px;
-  }
 }
+
+/* ============================================================
+   HIDE UNWANTED HTML5 QR ELEMENTS
+   ============================================================ */
+
+#reader img[alt="Info icon"] {
+  display: none !important;
+}
+
 </style>
 </head>
 
 <body>
 
-<header class="header">
-  <div class="header-left">
-    <div class="logo-box">DBD</div>
-    <div>
-      <div class="header-title">Den Berk Delice</div>
-      <div class="header-subtitle">Digitale buscontrole</div>
-    </div>
-  </div>
+<div class="container">
 
-  <div class="session">
-    <div id="sessionText">Niet ingelogd</div>
-    <button
-      id="logoutBtn"
-      class="btn btn-small btn-gray hidden"
-      onclick="uitloggen()">
-      Uitloggen
-    </button>
-  </div>
-</header>
+  <!-- ======================================================
+       LOGIN
+       ====================================================== -->
 
+  <div id="loginPage">
 
-<!-- =========================================================
-     LOGIN
-========================================================= -->
+    <div class="header">
 
-<div id="loginScreen" class="container">
+      <div class="header-left">
 
-  <div class="card login-box">
+        <div class="logo-box">
+          DBD
+        </div>
 
-    <div class="login-icon">🚌</div>
+        <div>
+          <div class="company">
+            Den Berk Delice
+          </div>
 
-    <div class="login-title">
-      Buscontrole
+          <div class="company-sub">
+            Digitale buscontrole
+          </div>
+        </div>
+
+      </div>
+
     </div>
 
-    <div class="login-text">
-      Chauffeur / controleur aanmelden
-    </div>
+    <div class="login-card">
 
-    <div class="form-group">
-      <label for="chauffeurCode">
+      <h2 class="login-title">
+        Chauffeur aanmelden
+      </h2>
+
+      <label for="code">
         Chauffeurscode
       </label>
 
       <input
-        id="chauffeurCode"
+        id="code"
         type="password"
         inputmode="numeric"
         autocomplete="off"
-        placeholder="Geef chauffeurscode in"
-        onkeydown="if(event.key==='Enter') login()">
-    </div>
+        placeholder="Voer code in">
 
-    <button
-      id="loginBtn"
-      class="btn btn-green"
-      onclick="login()">
-      🔐 INLOGGEN
-    </button>
+      <label for="bus">
+        Kies bus
+      </label>
 
-    <div id="loginMessage" class="status-message"></div>
+      <select id="bus">
 
-  </div>
+        <option value="">
+          -- Kies bus --
+        </option>
 
-</div>
+        <option value="BUS-A">
+          🚌 BUS-A
+        </option>
 
+        <option value="BUS-B">
+          🚌 BUS-B
+        </option>
 
-<!-- =========================================================
-     HOOFDSCHERM
-========================================================= -->
+        <option value="BUS-C">
+          🚌 BUS-C
+        </option>
 
-<div id="mainScreen" class="container hidden">
+        <option value="BUS-D">
+          🚌 BUS-D
+        </option>
 
+      </select>
 
-  <!-- BUS SELECTEREN -->
+      <button
+        id="loginButton"
+        class="primary-button"
+        onclick="login()">
 
-  <div class="card">
+        INLOGGEN
 
-    <div class="top-row">
-      <h2>🚌 Kies bus</h2>
+      </button>
 
-      <div class="scanning-indicator">
-        <span class="dot"></span>
-        Scanner actief
+      <div
+        id="loginError"
+        class="login-error">
       </div>
-    </div>
 
-    <div class="bus-buttons">
-
-      <button
-        id="busBtnA"
-        class="bus-button"
-        onclick="selectBus('BUS-A')">
-        BUS A
-      </button>
-
-      <button
-        id="busBtnB"
-        class="bus-button"
-        onclick="selectBus('BUS-B')">
-        BUS B
-      </button>
-
-      <button
-        id="busBtnC"
-        class="bus-button"
-        onclick="selectBus('BUS-C')">
-        BUS C
-      </button>
-
-      <button
-        id="busBtnD"
-        class="bus-button"
-        onclick="selectBus('BUS-D')">
-        BUS D
-      </button>
+      <div class="login-info">
+        Den Berk Delice – digitale buscontrole
+      </div>
 
     </div>
-
-    <div id="busMessage" class="status-message"></div>
 
   </div>
 
 
-  <!-- CAPACITEIT -->
+  <!-- ======================================================
+       SCANNER
+       ====================================================== -->
 
-  <div class="card">
+  <div id="scannerPage">
 
-    <div class="top-row">
-      <h2>👥 Buscapaciteit</h2>
+    <!-- HEADER -->
 
-      <button
-        class="btn btn-small btn-blue"
-        onclick="laadAlleCapaciteiten()">
-        ↻ Vernieuwen
-      </button>
-    </div>
+    <div class="header">
 
-    <div id="capacityGrid" class="capacity-grid">
-      <div class="capacity-card">
-        <div class="capacity-text">
-          Capaciteit wordt geladen...
+      <div class="header-left">
+
+        <div class="logo-box">
+          DBD
         </div>
+
+        <div>
+          <div class="company">
+            Den Berk Delice
+          </div>
+
+          <div class="company-sub">
+            Digitale buscontrole
+          </div>
+        </div>
+
       </div>
+
+      <div class="login-status">
+
+        <div>
+          Ingelogd
+        </div>
+
+        <button
+          class="logout-small"
+          onclick="logout()">
+
+          Uitloggen
+
+        </button>
+
+      </div>
+
     </div>
 
-  </div>
 
+    <!-- BUS -->
 
-  <!-- QR SCANNER -->
+    <div class="bus-top">
 
-  <div class="card">
+      <div class="bus-line">
 
-    <div class="top-row">
-      <h2>📷 QR-code scannen</h2>
+        <div class="bus-name">
+          🚌 <span id="busNaam">BUS-A</span>
+        </div>
 
-      <span id="selectedBusLabel">
-        Geen bus
-      </span>
+        <div
+          id="busState"
+          class="bus-state">
+
+          ACTIEF
+
+        </div>
+
+      </div>
+
     </div>
 
-    <div class="scanner-wrapper">
+
+    <!-- CAPACITY DIRECT BOVEN SCANNER -->
+
+    <div
+      id="capacityCard"
+      class="capacity-card">
+
+      <div class="capacity-main">
+
+        <div>
+
+          <div
+            id="capacityCount"
+            class="capacity-count">
+
+            0 / 0
+
+          </div>
+
+          <div class="capacity-label">
+            GESCAND OP DEZE BUS
+          </div>
+
+        </div>
+
+        <div class="capacity-free">
+
+          <div>
+            VRIJE PLAATSEN
+          </div>
+
+          <strong id="capacityFree">
+            0
+          </strong>
+
+        </div>
+
+      </div>
+
+      <div class="capacity-bar">
+
+        <div
+          id="capacityFill"
+          class="capacity-fill">
+        </div>
+
+      </div>
+
+      <div
+        id="capacityStatus"
+        class="capacity-status">
+
+        Capaciteit laden...
+
+      </div>
+
+    </div>
+
+
+    <!-- SCANNER -->
+
+    <div class="scanner-card">
+
+      <div class="scanner-title">
+        📷 SCAN BUSKAART
+      </div>
 
       <div id="reader"></div>
 
-      <div class="scan-controls">
+      <div class="camera-help">
+        Richt de camera op de persoonlijke QR-buskaart.
+      </div>
+
+      <div
+        id="loading"
+        class="loading">
+
+        ⏳ Controleren...
+
+      </div>
+
+
+      <!-- RESULTAAT -->
+
+      <div
+        id="status"
+        class="status">
+
+        <div
+          id="statusIcon"
+          class="status-icon">
+        </div>
+
+        <div
+          id="statusBig"
+          class="status-big">
+        </div>
+
+        <div
+          id="statusName"
+          class="status-name">
+        </div>
+
+        <div
+          id="statusLocation"
+          class="status-location">
+        </div>
+
+        <div
+          id="statusReason"
+          class="status-reason">
+        </div>
+
+        <div
+          id="statusCapacity"
+          class="status-capacity">
+        </div>
+
+      </div>
+
+
+      <!-- SCANNER CONTROLS -->
+
+      <div class="controls">
 
         <button
-          class="btn btn-green"
+          id="startButton"
+          class="control-button start-button"
           onclick="startScanner()">
-          ▶ Scanner starten
+
+          ▶️ Scanner starten
+
         </button>
 
         <button
-          class="btn btn-gray"
+          id="stopButton"
+          class="control-button stop-button"
           onclick="stopScanner()">
+
           ■ Stop scanner
+
         </button>
 
       </div>
 
-      <div class="small-note">
-        Scan de persoonlijke QR-buskaart.
-        De scanner blijft open voor de volgende medewerker.
-      </div>
-
-      <div id="scanResult" class="scan-result">
-
-        <div id="resultIcon" class="result-icon">
-          ✓
-        </div>
-
-        <div id="resultStatus" class="result-status">
-          TOEGELATEN
-        </div>
-
-        <div id="resultName" class="result-name"></div>
-
-        <div id="resultInfo" class="result-info"></div>
-
-        <div id="resultCapacity" class="capacity-result"></div>
-
-      </div>
-
     </div>
 
   </div>
 
-
-  <!-- HANDMATIGE NOODCONTROLE -->
-
-  <div class="card">
-
-    <h2>🔢 Handmatige noodcontrole</h2>
-
-    <div class="small-note">
-      Gebruik dit alleen wanneer een medewerker zijn/haar buskaart vergeten is.
-    </div>
-
-    <div class="manual-grid">
-
-      <div class="form-group">
-        <label for="manualPersonnel">
-          Personeelsnummer
-        </label>
-
-        <input
-          id="manualPersonnel"
-          type="text"
-          inputmode="numeric"
-          autocomplete="off"
-          placeholder="Bijv. 5348"
-          onkeydown="if(event.key==='Enter') zoekHandmatig()">
-      </div>
-
-      <div class="form-group">
-        <label for="manualLocation">
-          Locatie
-        </label>
-
-        <select id="manualLocation">
-          <option value="">-- automatisch / kies --</option>
-          <option value="Den Berk">Den Berk</option>
-          <option value="F1">F1</option>
-          <option value="F3">F3</option>
-          <option value="Rijkevorsel">Rijkevorsel</option>
-          <option value="Noorderwijk">Noorderwijk</option>
-        </select>
-      </div>
-
-    </div>
-
-    <div class="manual-actions">
-
-      <button
-        class="btn btn-blue"
-        onclick="zoekHandmatig()">
-        🔍 Medewerker zoeken
-      </button>
-
-      <button
-        class="btn btn-orange"
-        onclick="controleerHandmatig()">
-        🟢 Noodcontrole
-      </button>
-
-    </div>
-
-    <div id="employeeChoices" class="employee-choice hidden"></div>
-
-    <div id="manualMessage" class="status-message"></div>
-
-  </div>
-
-
-  <!-- BUSWISSEL -->
-
-  <div class="card">
-
-    <h2>🔄 Medewerker van bus wijzigen</h2>
-
-    <div class="small-note">
-      Gebruik dit wanneer een medewerker tijdelijk of definitief naar een andere bus moet.
-    </div>
-
-    <div class="switch-grid">
-
-      <div class="form-group">
-        <label for="switchPersonnel">
-          Personeelsnummer
-        </label>
-
-        <input
-          id="switchPersonnel"
-          type="text"
-          inputmode="numeric"
-          placeholder="Personeelsnummer">
-      </div>
-
-      <div class="form-group">
-        <label for="switchLocation">
-          Locatie
-        </label>
-
-        <select id="switchLocation">
-          <option value="">-- kies locatie --</option>
-          <option value="Den Berk">Den Berk</option>
-          <option value="F1">F1</option>
-          <option value="F3">F3</option>
-          <option value="Rijkevorsel">Rijkevorsel</option>
-          <option value="Noorderwijk">Noorderwijk</option>
-        </select>
-      </div>
-
-    </div>
-
-    <div class="form-row">
-
-      <div class="form-group">
-        <label for="newBus">
-          Nieuwe bus
-        </label>
-
-        <select id="newBus">
-          <option value="BUS-A">BUS-A</option>
-          <option value="BUS-B">BUS-B</option>
-          <option value="BUS-C">BUS-C</option>
-          <option value="BUS-D">BUS-D</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>&nbsp;</label>
-
-        <button
-          class="btn btn-green"
-          onclick="switchEmployee()">
-          🔄 Bus wijzigen
-        </button>
-      </div>
-
-    </div>
-
-    <div id="switchMessage" class="status-message"></div>
-
-    <div class="divider"></div>
-
-    <h3>👥 Iedereen van één bus wijzigen</h3>
-
-    <div class="form-row">
-
-      <div class="form-group">
-        <label for="oldBus">
-          Oude bus
-        </label>
-
-        <select id="oldBus">
-          <option value="BUS-A">BUS-A</option>
-          <option value="BUS-B">BUS-B</option>
-          <option value="BUS-C">BUS-C</option>
-          <option value="BUS-D">BUS-D</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="allNewBus">
-          Nieuwe bus
-        </label>
-
-        <select id="allNewBus">
-          <option value="BUS-A">BUS-A</option>
-          <option value="BUS-B">BUS-B</option>
-          <option value="BUS-C">BUS-C</option>
-          <option value="BUS-D">BUS-D</option>
-        </select>
-      </div>
-
-    </div>
-
-    <div class="form-group">
-
-      <label for="allLocation">
-        Locatie
-      </label>
-
-      <select id="allLocation">
-        <option value="">Alle locaties</option>
-        <option value="Den Berk">Den Berk</option>
-        <option value="F1">F1</option>
-        <option value="F3">F3</option>
-        <option value="Rijkevorsel">Rijkevorsel</option>
-        <option value="Noorderwijk">Noorderwijk</option>
-      </select>
-
-    </div>
-
-    <button
-      class="btn btn-orange"
-      onclick="switchAllEmployees()">
-      🔄 Iedereen wijzigen
-    </button>
-
-    <div id="switchAllMessage" class="status-message"></div>
-
-  </div>
-
-
-  <!-- BEHEER -->
-
-  <div class="card">
-
-    <h2>⚙️ Systeembeheer</h2>
-
-    <div class="tools-grid">
-
-      <button
-        class="btn btn-blue"
-        onclick="laadAlleCapaciteiten()">
-        🚌 Capaciteit vernieuwen
-      </button>
-
-      <button
-        class="btn btn-blue"
-        onclick="refreshCache()">
-        🔄 Medewerkers vernieuwen
-      </button>
-
-      <button
-        class="btn btn-gray"
-        onclick="testVerbinding()">
-        🔌 Test verbinding
-      </button>
-
-    </div>
-
-    <div id="systemMessage" class="status-message"></div>
-
-  </div>
-
-</div>
-
-
-<div class="footer">
-  Den Berk Delice – Digitale Buscontrole
 </div>
 
 
 <script>
 
-/* =========================================================
-   INSTELLINGEN
-========================================================= */
+/* ============================================================
+   API
+   ============================================================ */
 
 const API_URL =
   "https://script.google.com/macros/s/AKfycbyilW3j28SCm-7mch8tgdDkp9RzQsi_J-RsUD3ziFP26LVlJuE06fEbiCpPBVqUQntD4w/exec";
 
-const SESSION_KEY = "DBD_BUS_TOKEN";
-const BUS_KEY = "DBD_BUS_SELECTED";
 
-let token = sessionStorage.getItem(SESSION_KEY) || "";
-let selectedBus = sessionStorage.getItem(BUS_KEY) || "";
+/* ============================================================
+   VARIABELEN
+   ============================================================ */
 
-let html5QrCode = null;
+let chauffeurToken = "";
+let gekozenBus = "";
+
+let scanner = null;
 let scannerRunning = false;
 let scanBusy = false;
-let lastBadge = "";
+
+let lastScannedBadge = "";
 let lastScanTime = 0;
 
-let selectedManualLocation = "";
+let audioContext = null;
 
 
-/* =========================================================
-   HULPFUNCTIES
-========================================================= */
+/* ============================================================
+   API CALL - JSONP
+   ============================================================ */
 
-function $(id) {
-  return document.getElementById(id);
-}
+function apiCall(params) {
 
-
-function escapeHtml(value) {
-
-  return String(value == null ? "" : value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
-
-function showMessage(id, text, type) {
-
-  const el = $(id);
-
-  if (!el) {
-    return;
-  }
-
-  el.className = "status-message show " + (type || "info");
-  el.innerHTML = escapeHtml(text);
-}
-
-
-function hideMessage(id) {
-
-  const el = $(id);
-
-  if (!el) {
-    return;
-  }
-
-  el.className = "status-message";
-  el.innerHTML = "";
-}
-
-
-function api(action, params = {}) {
-
-  return new Promise(function(resolve, reject) {
+  return new Promise((resolve, reject) => {
 
     const callbackName =
-      "dbdCallback_" +
+      "callback_" +
       Date.now() +
       "_" +
       Math.floor(Math.random() * 100000);
@@ -1074,1157 +942,1222 @@ function api(action, params = {}) {
     const script =
       document.createElement("script");
 
-    const query = new URLSearchParams();
+    const query =
+      new URLSearchParams(params);
 
-    query.set("api", "1");
-    query.set("action", action);
-    query.set("callback", callbackName);
-
-    Object.keys(params).forEach(function(key) {
-
-      const value = params[key];
-
-      if (value !== undefined && value !== null) {
-        query.set(key, String(value));
-      }
-
-    });
-
-    const timeout =
-      setTimeout(function() {
-
-        cleanup();
-
-        reject(
-          new Error("Geen antwoord van de server.")
-        );
-
-      }, 15000);
-
-
-    function cleanup() {
-
-      clearTimeout(timeout);
-
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
-
-      try {
-        delete window[callbackName];
-      } catch (e) {
-        window[callbackName] = undefined;
-      }
-    }
-
-
-    window[callbackName] =
-      function(data) {
-
-        cleanup();
-
-        resolve(data);
-      };
-
-
-    script.onerror =
-      function() {
-
-        cleanup();
-
-        reject(
-          new Error("Kan de buscontrole-server niet bereiken.")
-        );
-
-      };
-
+    query.set(
+      "callback",
+      callbackName
+    );
 
     script.src =
       API_URL +
       "?" +
       query.toString();
 
+    let finished = false;
+
+    window[callbackName] =
+      function(data) {
+
+        if (finished) {
+          return;
+        }
+
+        finished = true;
+
+        try {
+          resolve(data);
+        }
+        finally {
+
+          delete window[callbackName];
+
+          if (script.parentNode) {
+            script.parentNode.removeChild(script);
+          }
+
+        }
+
+      };
+
+
+    script.onerror =
+      function() {
+
+        if (finished) {
+          return;
+        }
+
+        finished = true;
+
+        delete window[callbackName];
+
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
+
+        reject(
+          new Error(
+            "Kan server niet bereiken."
+          )
+        );
+
+      };
+
+
     document.body.appendChild(script);
+
+
+    setTimeout(
+      function() {
+
+        if (
+          !finished &&
+          window[callbackName]
+        ) {
+
+          finished = true;
+
+          delete window[callbackName];
+
+          if (script.parentNode) {
+            script.parentNode.removeChild(script);
+          }
+
+          reject(
+            new Error(
+              "Server reageert niet."
+            )
+          );
+
+        }
+
+      },
+      15000
+    );
 
   });
 
 }
 
 
-/* =========================================================
+/* ============================================================
+   AUDIO INITIALISEREN
+   ============================================================ */
+
+function initAudio() {
+
+  try {
+
+    if (!audioContext) {
+
+      const AudioContext =
+        window.AudioContext ||
+        window.webkitAudioContext;
+
+      if (AudioContext) {
+        audioContext =
+          new AudioContext();
+      }
+
+    }
+
+    if (
+      audioContext &&
+      audioContext.state === "suspended"
+    ) {
+
+      audioContext.resume();
+
+    }
+
+  }
+  catch (e) {
+
+    console.log(
+      "Audio init fout:",
+      e
+    );
+
+  }
+
+}
+
+
+/* ============================================================
+   LUID GROEN GELUID
+   ============================================================ */
+
+function playGreenSound() {
+
+  try {
+
+    initAudio();
+
+    if (!audioContext) {
+      return;
+    }
+
+    const now =
+      audioContext.currentTime;
+
+
+    function tone(
+      frequency,
+      start,
+      duration,
+      volume
+    ) {
+
+      const oscillator =
+        audioContext.createOscillator();
+
+      const gain =
+        audioContext.createGain();
+
+      oscillator.type = "sine";
+
+      oscillator.frequency.value =
+        frequency;
+
+      gain.gain.setValueAtTime(
+        0.0001,
+        now + start
+      );
+
+      gain.gain.exponentialRampToValueAtTime(
+        volume,
+        now + start + 0.025
+      );
+
+      gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        now + start + duration
+      );
+
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+
+      oscillator.start(
+        now + start
+      );
+
+      oscillator.stop(
+        now + start + duration + 0.03
+      );
+
+    }
+
+
+    /* Duidelijke POSITIEVE dubbele toon */
+
+    tone(
+      880,
+      0,
+      0.18,
+      0.35
+    );
+
+    tone(
+      1175,
+      0.19,
+      0.25,
+      0.38
+    );
+
+
+    if (
+      navigator.vibrate
+    ) {
+
+      navigator.vibrate(
+        [100, 60, 140]
+      );
+
+    }
+
+  }
+  catch (e) {
+
+    console.log(
+      "Groen geluid fout:",
+      e
+    );
+
+  }
+
+}
+
+
+/* ============================================================
+   LUID ROOD GELUID
+   ============================================================ */
+
+function playRedSound() {
+
+  try {
+
+    initAudio();
+
+    if (!audioContext) {
+      return;
+    }
+
+    const now =
+      audioContext.currentTime;
+
+
+    function tone(
+      frequency,
+      start,
+      duration,
+      volume
+    ) {
+
+      const oscillator =
+        audioContext.createOscillator();
+
+      const gain =
+        audioContext.createGain();
+
+      oscillator.type = "square";
+
+      oscillator.frequency.value =
+        frequency;
+
+      gain.gain.setValueAtTime(
+        0.0001,
+        now + start
+      );
+
+      gain.gain.exponentialRampToValueAtTime(
+        volume,
+        now + start + 0.01
+      );
+
+      gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        now + start + duration
+      );
+
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+
+      oscillator.start(
+        now + start
+      );
+
+      oscillator.stop(
+        now + start + duration + 0.03
+      );
+
+    }
+
+
+    /* Luide duidelijke waarschuwing */
+
+    tone(
+      330,
+      0,
+      0.22,
+      0.55
+    );
+
+    tone(
+      220,
+      0.27,
+      0.22,
+      0.55
+    );
+
+    tone(
+      330,
+      0.54,
+      0.25,
+      0.55
+    );
+
+
+    if (
+      navigator.vibrate
+    ) {
+
+      navigator.vibrate(
+        [
+          180,
+          80,
+          180,
+          80,
+          250
+        ]
+      );
+
+    }
+
+  }
+  catch (e) {
+
+    console.log(
+      "Rood geluid fout:",
+      e
+    );
+
+  }
+
+}
+
+
+/* ============================================================
    LOGIN
-========================================================= */
+   ============================================================ */
 
 async function login() {
 
   const code =
-    $("chauffeurCode").value.trim();
+    document
+      .getElementById("code")
+      .value
+      .trim();
+
+  const bus =
+    document
+      .getElementById("bus")
+      .value;
+
+  const error =
+    document
+      .getElementById("loginError");
+
+  const button =
+    document
+      .getElementById("loginButton");
+
+
+  error.textContent = "";
+
 
   if (!code) {
 
-    showMessage(
-      "loginMessage",
-      "Geef de chauffeurscode in.",
-      "error"
-    );
+    error.textContent =
+      "Vul de chauffeurscode in.";
 
     return;
+
   }
 
-  $("loginBtn").disabled = true;
 
-  hideMessage("loginMessage");
+  if (!bus) {
+
+    error.textContent =
+      "Kies eerst een bus.";
+
+    return;
+
+  }
+
+
+  button.disabled = true;
+
+  button.textContent =
+    "INLOGGEN...";
+
+
+  /*
+   * Audio alvast activeren vanuit
+   * de gebruikersactie van de login.
+   */
+
+  initAudio();
+
 
   try {
 
     const result =
-      await api("login", {
+      await apiCall({
+
+        api: "1",
+
+        action: "login",
+
         code: code
+
       });
 
-
-    if (result && result.toegestaan) {
-
-      token = result.token;
-
-      sessionStorage.setItem(
-        SESSION_KEY,
-        token
-      );
-
-      $("loginScreen")
-        .classList.add("hidden");
-
-      $("mainScreen")
-        .classList.remove("hidden");
-
-      $("logoutBtn")
-        .classList.remove("hidden");
-
-      $("sessionText").textContent =
-        "Ingelogd";
-
-      showMessage(
-        "systemMessage",
-        "Chauffeur succesvol ingelogd.",
-        "success"
-      );
-
-      if (!selectedBus) {
-        selectedBus = "BUS-A";
-      }
-
-      selectBus(
-        selectedBus,
-        false
-      );
-
-      await laadAlleCapaciteiten();
-
-      setTimeout(function() {
-        startScanner();
-      }, 400);
-
-    } else {
-
-      showMessage(
-        "loginMessage",
-        result && result.reden
-          ? result.reden
-          : "Inloggen mislukt.",
-        "error"
-      );
-
-    }
-
-  } catch (error) {
-
-    showMessage(
-      "loginMessage",
-      error.message,
-      "error"
-    );
-
-  } finally {
-
-    $("loginBtn").disabled = false;
-
-  }
-}
-
-
-/* =========================================================
-   INIT
-========================================================= */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  function() {
-
-    if (token) {
-
-      $("loginScreen")
-        .classList.add("hidden");
-
-      $("mainScreen")
-        .classList.remove("hidden");
-
-      $("logoutBtn")
-        .classList.remove("hidden");
-
-      $("sessionText")
-        .textContent =
-        "Ingelogd";
-
-      if (!selectedBus) {
-        selectedBus = "BUS-A";
-      }
-
-      selectBus(
-        selectedBus,
-        false
-      );
-
-      laadAlleCapaciteiten();
-
-      setTimeout(function() {
-        startScanner();
-      }, 500);
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   BUS SELECTEREN
-========================================================= */
-
-function selectBus(bus, save = true) {
-
-  selectedBus = bus;
-
-  if (save) {
-
-    sessionStorage.setItem(
-      BUS_KEY,
-      bus
-    );
-
-  }
-
-  const labels = [
-    "BUS-A",
-    "BUS-B",
-    "BUS-C",
-    "BUS-D"
-  ];
-
-  labels.forEach(function(id) {
-
-    const letter =
-      id.replace("BUS-", "");
-
-    const button =
-      $("busBtn" + letter);
-
-    if (button) {
-      button.classList.remove("active");
-    }
-
-  });
-
-
-  const letter =
-    bus.replace("BUS-", "");
-
-  const activeButton =
-    $("busBtn" + letter);
-
-  if (activeButton) {
-    activeButton.classList.add("active");
-  }
-
-
-  $("selectedBusLabel").textContent =
-    "Geselecteerd: " + bus;
-
-  hideMessage("busMessage");
-
-  laadBusCapaciteit(bus);
-}
-
-
-/* =========================================================
-   CAPACITEIT ÉÉN BUS
-========================================================= */
-
-async function laadBusCapaciteit(bus) {
-
-  if (!token || !bus) {
-    return;
-  }
-
-  try {
-
-    const result =
-      await api("capacity", {
-        bus: bus,
-        token: token
-      });
-
-    if (!result) {
-      return;
-    }
-
-    if (result.status === "NIET INGELOGD") {
-      sessieVerlopen();
-      return;
-    }
-
-    updateSingleBusButton(result);
-
-    updateSelectedCapacityText(result);
-
-  } catch (error) {
-
-    console.log(
-      "Capaciteit fout:",
-      error
-    );
-
-  }
-}
-
-
-/* =========================================================
-   ALLE CAPACITEITEN
-========================================================= */
-
-async function laadAlleCapaciteiten() {
-
-  if (!token) {
-    return;
-  }
-
-  try {
-
-    const result =
-      await api("allCapacity", {
-        token: token
-      });
-
-    if (!result) {
-      return;
-    }
-
-    if (result.status === "NIET INGELOGD") {
-      sessieVerlopen();
-      return;
-    }
 
     if (!result.toegestaan) {
 
-      showMessage(
-        "systemMessage",
-        result.status || "Capaciteit kon niet worden geladen.",
-        "error"
-      );
+      error.textContent =
+        result.reden ||
+        result.melding ||
+        "Inloggen mislukt.";
 
       return;
+
     }
 
-    renderCapacityGrid(
-      result.bussen || []
+
+    chauffeurToken =
+      result.token;
+
+    gekozenBus =
+      bus;
+
+
+    localStorage.setItem(
+      "chauffeurToken",
+      chauffeurToken
     );
 
-  } catch (error) {
-
-    showMessage(
-      "systemMessage",
-      error.message,
-      "error"
+    localStorage.setItem(
+      "gekozenBus",
+      gekozenBus
     );
 
+
+    document
+      .getElementById("busNaam")
+      .textContent =
+      gekozenBus;
+
+
+    document
+      .getElementById("loginPage")
+      .style.display =
+      "none";
+
+
+    document
+      .getElementById("scannerPage")
+      .style.display =
+      "block";
+
+
+    /*
+     * Capaciteit meteen ophalen.
+     */
+
+    await updateCapacity();
+
+
+    /*
+     * Scanner automatisch starten.
+     */
+
+    await startScanner();
+
   }
-}
+  catch (e) {
 
+    console.error(e);
 
-function renderCapacityGrid(bussen) {
+    error.textContent =
+      "Verbinding met de buscontrole mislukt.";
 
-  const grid =
-    $("capacityGrid");
-
-  if (!bussen.length) {
-
-    grid.innerHTML =
-      '<div class="capacity-card">' +
-      '<div class="capacity-text">Geen bussen gevonden.</div>' +
-      '</div>';
-
-    return;
   }
+  finally {
 
-  grid.innerHTML =
-    bussen.map(function(bus) {
+    button.disabled = false;
 
-      let className =
-        "capacity-card ok";
-
-      if (bus.status === "BUS VOL") {
-        className =
-          "capacity-card full";
-      } else if (
-        bus.status === "LAATSTE PLAATSEN"
-      ) {
-        className =
-          "capacity-card warning";
-      }
-
-      return `
-        <div class="${className}">
-          <div class="capacity-bus">
-            ${escapeHtml(bus.bus)}
-          </div>
-
-          <div class="capacity-number">
-            ${escapeHtml(bus.vrijePlaatsen)}
-          </div>
-
-          <div class="capacity-text">
-            plaatsen vrij
-          </div>
-
-          <div class="capacity-text">
-            ${escapeHtml(bus.gebruiktePlaatsen)}
-            /
-            ${escapeHtml(bus.maxPlaatsen)}
-            gebruikt
-          </div>
-
-          <div class="capacity-text">
-            ${escapeHtml(bus.status)}
-          </div>
-        </div>
-      `;
-
-    }).join("");
-
-}
-
-
-/* =========================================================
-   BUS BUTTON STATUS
-========================================================= */
-
-function updateSingleBusButton(result) {
-
-  if (!result.bus) {
-    return;
-  }
-
-  const letter =
-    result.bus.replace("BUS-", "");
-
-  const button =
-    $("busBtn" + letter);
-
-  if (!button) {
-    return;
-  }
-
-  button.classList.remove(
-    "bus-warning",
-    "bus-full"
-  );
-
-  if (result.status === "BUS VOL") {
-
-    button.classList.add(
-      "bus-full"
-    );
-
-  } else if (
-    result.status === "LAATSTE PLAATSEN"
-  ) {
-
-    button.classList.add(
-      "bus-warning"
-    );
+    button.textContent =
+      "INLOGGEN";
 
   }
 
 }
 
 
-function updateSelectedCapacityText(result) {
-
-  if (!result) {
-    return;
-  }
-
-  const text =
-    result.status === "BUS VOL"
-      ? "⛔ BUS VOL"
-      : result.status === "LAATSTE PLAATSEN"
-        ? "⚠️ Nog " +
-          result.vrijePlaatsen +
-          " plaatsen"
-        : "🟢 " +
-          result.vrijePlaatsen +
-          " plaatsen vrij";
-
-  $("busMessage").textContent =
-    text;
-
-}
-
-
-/* =========================================================
+/* ============================================================
    SCANNER STARTEN
-========================================================= */
+   ============================================================ */
 
 async function startScanner() {
-
-  if (!token) {
-
-    showMessage(
-      "busMessage",
-      "Log eerst in.",
-      "error"
-    );
-
-    return;
-  }
-
-  if (!selectedBus) {
-
-    showMessage(
-      "busMessage",
-      "Selecteer eerst een bus.",
-      "error"
-    );
-
-    return;
-  }
 
   if (scannerRunning) {
     return;
   }
 
+
+  initAudio();
+
+
   try {
 
-    html5QrCode =
-      html5QrCode ||
-      new Html5Qrcode("reader");
+    /*
+     * Oude scanner eventueel opruimen.
+     */
 
+    if (scanner) {
 
-    await html5QrCode.start(
-
-      {
-        facingMode: "environment"
-      },
-
-      {
-        fps: 12,
-        qrbox: {
-          width: 280,
-          height: 280
-        },
-        aspectRatio: 1.0
-      },
-
-      onQrSuccess,
-
-      function(errorMessage) {
-        // Geen actie nodig voor normale scan-fouten.
+      try {
+        await scanner.clear();
       }
+      catch (e) {}
+
+      scanner = null;
+
+    }
+
+
+    document
+      .getElementById("reader")
+      .innerHTML = "";
+
+
+    scanner =
+      new Html5Qrcode(
+        "reader"
+      );
+
+
+    const config = {
+
+      fps: 12,
+
+      qrbox: function(
+        viewfinderWidth,
+        viewfinderHeight
+      ) {
+
+        const size =
+          Math.floor(
+            Math.min(
+              viewfinderWidth,
+              viewfinderHeight
+            ) * 0.72
+          );
+
+        return {
+          width: Math.min(
+            size,
+            280
+          ),
+          height: Math.min(
+            size,
+            280
+          )
+        };
+
+      },
+
+      aspectRatio: 1.0
+
+    };
+
+
+    await scanner.start(
+
+      {
+        facingMode:
+          "environment"
+      },
+
+      config,
+
+      onScanSuccess,
+
+      onScanFailure
 
     );
 
-    scannerRunning = true;
 
-  } catch (error) {
+    scannerRunning =
+      true;
 
-    showMessage(
-      "busMessage",
-      "Camera kon niet worden gestart. Geef de browser toestemming voor de camera.",
-      "error"
-    );
+
+    document
+      .getElementById("startButton")
+      .disabled =
+      true;
+
+
+    document
+      .getElementById("stopButton")
+      .disabled =
+      false;
+
+
+  }
+  catch (error) {
 
     console.error(error);
 
+
+    scannerRunning =
+      false;
+
+
+    document
+      .getElementById("reader")
+      .innerHTML =
+      "<div class='error'>" +
+      "🔴 CAMERA KAN NIET STARTEN<br><br>" +
+      "Geef Safari/Chrome toestemming voor de camera " +
+      "en probeer opnieuw." +
+      "</div>";
+
+
   }
 
 }
 
 
-/* =========================================================
+/* ============================================================
    SCANNER STOPPEN
-========================================================= */
+   ============================================================ */
 
 async function stopScanner() {
 
-  if (!html5QrCode || !scannerRunning) {
-    return;
-  }
-
   try {
 
-    await html5QrCode.stop();
+    if (
+      scanner &&
+      scannerRunning
+    ) {
 
-    scannerRunning = false;
+      await scanner.stop();
 
-  } catch (error) {
+      await scanner.clear();
+
+    }
+
+  }
+  catch (e) {
 
     console.log(
-      "Scanner stop fout:",
-      error
+      "Scanner stop:",
+      e
     );
 
   }
 
+
+  scannerRunning =
+    false;
+
+  scanner =
+    null;
+
+
+  document
+    .getElementById("startButton")
+    .disabled =
+    false;
+
+
+  document
+    .getElementById("stopButton")
+    .disabled =
+    true;
+
 }
 
 
-/* =========================================================
-   QR SCAN
-========================================================= */
+/* ============================================================
+   QR GELEZEN
+   ============================================================ */
 
-async function onQrSuccess(decodedText) {
+async function onScanSuccess(
+  decodedText
+) {
 
   if (scanBusy) {
     return;
   }
 
-  const badge =
-    String(decodedText || "").trim();
 
-  if (!badge) {
+  const badgeId =
+    String(decodedText)
+      .trim();
+
+
+  if (!badgeId) {
     return;
   }
+
+
+  /*
+   * Zelfde QR niet meerdere keren
+   * direct verwerken.
+   */
 
   const now =
     Date.now();
 
-  /*
-   * Beschermt tegen dezelfde QR die meerdere
-   * keren per seconde door de camera wordt gelezen.
-   *
-   * Dit is alleen een lokale beveiliging.
-   * De echte controle van "1 keer per dag"
-   * gebeurt in Code_nieuw.gs.
-   */
 
   if (
-    badge === lastBadge &&
-    now - lastScanTime < 1500
-  ) {
-    return;
-  }
-
-  lastBadge = badge;
-  lastScanTime = now;
-
-  await controleerBadge(badge);
-
-}
-
-
-/* =========================================================
-   BADGE CONTROLEREN
-========================================================= */
-
-async function controleerBadge(badge) {
-
-  if (!token) {
-
-    sessieVerlopen();
-
-    return;
-  }
-
-  if (!selectedBus) {
-
-    toonScanResultaat({
-      toegestaan: false,
-      status: "GEEN BUS",
-      reden: "Selecteer eerst een bus."
-    });
-
-    return;
-  }
-
-  scanBusy = true;
-
-  try {
-
-    const result =
-      await api("scan", {
-        badge: badge,
-        bus: selectedBus,
-        token: token
-      });
-
-
-    if (
-      result &&
-      result.status === "NIET INGELOGD"
-    ) {
-
-      sessieVerlopen();
-
-      return;
-    }
-
-
-    toonScanResultaat(result);
-
-
-    /*
-     * Na iedere scan opnieuw de capaciteit ophalen.
-     * Zo blijft het aantal vrije plaatsen actueel.
-     */
-
-    if (result && result.bus) {
-      await laadBusCapaciteit(
-        result.bus
-      );
-    }
-
-    await laadAlleCapaciteiten();
-
-
-  } catch (error) {
-
-    toonScanResultaat({
-      toegestaan: false,
-      status: "SYSTEEMFOUT",
-      reden: error.message
-    });
-
-  } finally {
-
-    /*
-     * Scanner blijft open.
-     * Alleen korte blokkering zodat dezelfde QR
-     * niet onmiddellijk opnieuw wordt gelezen.
-     */
-
-    setTimeout(function() {
-      scanBusy = false;
-    }, 900);
-
-  }
-
-}
-
-
-/* =========================================================
-   SCAN RESULTAAT TONEN
-========================================================= */
-
-function toonScanResultaat(result) {
-
-  const box =
-    $("scanResult");
-
-  const toegestaan =
-    !!(
-      result &&
-      result.toegestaan
-    );
-
-  box.className =
-    "scan-result " +
-    (toegestaan
-      ? "green"
-      : "red");
-
-
-  $("resultIcon").textContent =
-    toegestaan
-      ? "✓"
-      : "✕";
-
-
-  $("resultStatus").textContent =
-    result && result.status
-      ? result.status
-      : toegestaan
-        ? "TOEGELATEN"
-        : "GEWEIGERD";
-
-
-  $("resultName").textContent =
-    result && result.naam
-      ? result.naam
-      : "";
-
-
-  let info = "";
-
-
-  if (result && result.locatie) {
-
-    info +=
-      "📍 " +
-      result.locatie;
-
-  }
-
-
-  if (result && result.bus) {
-
-    if (info) {
-      info += "  •  ";
-    }
-
-    info +=
-      "🚌 " +
-      result.bus;
-
-  }
-
-
-  if (result && result.reden) {
-
-    if (info) {
-      info += "<br>";
-    }
-
-    info +=
-      "ℹ️ " +
-      escapeHtml(result.reden);
-
-  }
-
-
-  $("resultInfo").innerHTML =
-    info;
-
-
-  if (
-    result &&
-    result.vrijePlaatsen !== undefined
+    badgeId === lastScannedBadge &&
+    now - lastScanTime < 1800
   ) {
 
-    $("resultCapacity").textContent =
-      "🪑 " +
-      result.vrijePlaatsen +
-      " plaatsen vrij";
-
-  } else if (
-    result &&
-    result.capaciteitsStatus
-  ) {
-
-    $("resultCapacity").textContent =
-      "🚌 " +
-      result.capaciteitsStatus;
-
-  } else {
-
-    $("resultCapacity").textContent =
-      "";
-
-  }
-
-
-  box.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
-
-}
-
-
-/* =========================================================
-   HANDMATIGE ZOEKOPDRACHT
-========================================================= */
-
-async function zoekHandmatig() {
-
-  const personeelsnummer =
-    $("manualPersonnel")
-      .value
-      .trim();
-
-  if (!personeelsnummer) {
-
-    showMessage(
-      "manualMessage",
-      "Geef een personeelsnummer in.",
-      "error"
-    );
-
     return;
-  }
-
-  hideMessage("manualMessage");
-
-  try {
-
-    const result =
-      await api("findEmployee", {
-        personeelsnummer:
-          personeelsnummer,
-        token: token
-      });
-
-
-    if (
-      result.status === "NIET INGELOGD"
-    ) {
-
-      sessieVerlopen();
-
-      return;
-    }
-
-
-    if (
-      !result.toegestaan ||
-      !result.medewerkers ||
-      !result.medewerkers.length
-    ) {
-
-      showMessage(
-        "manualMessage",
-        "Personeelsnummer niet gevonden.",
-        "error"
-      );
-
-      $("employeeChoices")
-        .classList.add("hidden");
-
-      return;
-    }
-
-
-    toonMedewerkerKeuze(
-      result.medewerkers
-    );
-
-
-  } catch (error) {
-
-    showMessage(
-      "manualMessage",
-      error.message,
-      "error"
-    );
 
   }
 
-}
+
+  lastScannedBadge =
+    badgeId;
+
+  lastScanTime =
+    now;
 
 
-/* =========================================================
-   MEDEWERKER KIEZEN BIJ DUBBEL NUMMER
-========================================================= */
-
-function toonMedewerkerKeuze(
-  medewerkers
-) {
-
-  const box =
-    $("employeeChoices");
-
-  if (medewerkers.length === 1) {
-
-    selectedManualLocation =
-      medewerkers[0].locatie;
-
-    $("manualLocation").value =
-      medewerkers[0].locatie;
-
-    box.classList.add("hidden");
-
-    showMessage(
-      "manualMessage",
-      medewerkers[0].naam +
-      " – " +
-      medewerkers[0].locatie +
-      " – " +
-      medewerkers[0].bus,
-      "info"
-    );
-
-    return;
-  }
+  scanBusy =
+    true;
 
 
-  box.classList.remove(
-    "hidden"
-  );
-
-
-  box.innerHTML =
-    "<strong>⚠️ Dit personeelsnummer bestaat op meerdere locaties.</strong>" +
-    "<div class='small-note'>Kies de juiste medewerker:</div>" +
-
-    medewerkers.map(function(m) {
-
-      return `
-        <div
-          class="employee-option"
-          onclick="selectManualEmployee('${encodeURIComponent(m.locatie)}')">
-
-          <strong>
-            ${escapeHtml(m.naam)}
-          </strong>
-
-          <br>
-
-          📍 ${escapeHtml(m.locatie)}
-
-          &nbsp; • &nbsp;
-
-          🚌 ${escapeHtml(m.bus)}
-
-          &nbsp; • &nbsp;
-
-          ${escapeHtml(m.status)}
-
-        </div>
-      `;
-
-    }).join("");
-
-}
-
-
-function selectManualEmployee(
-  encodedLocation
-) {
-
-  selectedManualLocation =
-    decodeURIComponent(
-      encodedLocation
-    );
-
-  $("manualLocation").value =
-    selectedManualLocation;
-
-  $("employeeChoices")
-    .classList.add("hidden");
-
-  showMessage(
-    "manualMessage",
-    "Locatie geselecteerd: " +
-    selectedManualLocation,
-    "success"
-  );
-
-}
-
-
-/* =========================================================
-   HANDMATIGE NOODCONTROLE
-========================================================= */
-
-async function controleerHandmatig() {
-
-  const personeelsnummer =
-    $("manualPersonnel")
-      .value
-      .trim();
-
-  let locatie =
-    $("manualLocation")
-      .value
-      .trim();
-
-
-  if (!personeelsnummer) {
-
-    showMessage(
-      "manualMessage",
-      "Geef een personeelsnummer in.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  if (!locatie) {
-
-    locatie =
-      selectedManualLocation;
-  }
+  document
+    .getElementById("loading")
+    .style.display =
+    "block";
 
 
   try {
 
     const result =
-      await api("manual", {
+      await apiCall({
 
-        personeelsnummer:
-          personeelsnummer,
+        api: "1",
 
-        locatie:
-          locatie,
+        action: "scan",
 
-        bus:
-          selectedBus,
+        badge: badgeId,
 
-        token:
-          token
+        bus: gekozenBus,
+
+        token: chauffeurToken
 
       });
 
 
-    if (
-      result.status === "NIET INGELOGD"
-    ) {
-
-      sessieVerlopen();
-
-      return;
-    }
-
-
-    /*
-     * Wanneer hetzelfde personeelsnummer
-     * op meerdere locaties bestaat,
-     * toont de backend KIES LOCATIE.
-     */
-
-    if (
-      result.status === "KIES LOCATIE"
-    ) {
-
-      toonMedewerkerKeuze(
-        result.medewerkers || []
-      );
-
-      showMessage(
-        "manualMessage",
-        "Kies eerst de juiste locatie.",
-        "info"
-      );
-
-      return;
-    }
-
-
-    toonHandmatigResultaat(
+    toonResultaat(
       result
     );
 
 
-    await laadAlleCapaciteiten();
+    /*
+     * Capaciteit direct opnieuw
+     * ophalen na iedere scan.
+     */
+
+    if (
+      result &&
+      typeof result.gebruiktePlaatsen !==
+      "undefined"
+    ) {
+
+      updateCapacityFromResult(
+        result
+      );
+
+    }
+    else {
+
+      await updateCapacity();
+
+    }
 
 
-  } catch (error) {
+    /*
+     * Bij een geldige scan geluid.
+     */
 
-    showMessage(
-      "manualMessage",
-      error.message,
-      "error"
+    if (
+      result &&
+      result.toegestaan
+    ) {
+
+      playGreenSound();
+
+    }
+    else {
+
+      playRedSound();
+
+    }
+
+
+    /*
+     * Resultaat langer zichtbaar
+     * zodat chauffeur het goed kan zien.
+     */
+
+    await sleep(
+      2600
+    );
+
+
+    verbergResultaat();
+
+
+  }
+  catch (error) {
+
+    console.error(error);
+
+
+    toonFout(
+      "VERBINDINGSPROBLEEM",
+      "Controle kon niet worden uitgevoerd."
+    );
+
+
+    playRedSound();
+
+
+    await sleep(
+      2200
+    );
+
+
+    verbergResultaat();
+
+  }
+  finally {
+
+    document
+      .getElementById("loading")
+      .style.display =
+      "none";
+
+
+    scanBusy =
+      false;
+
+  }
+
+}
+
+
+/* ============================================================
+   ONGELDIGE QR SCANS
+   ============================================================ */
+
+function onScanFailure(
+  errorMessage
+) {
+
+  /*
+   * Geen actie.
+   */
+
+}
+
+
+/* ============================================================
+   RESULTAAT TONEN
+   ============================================================ */
+
+function toonResultaat(
+  result
+) {
+
+  const status =
+    document
+      .getElementById("status");
+
+  const icon =
+    document
+      .getElementById("statusIcon");
+
+  const big =
+    document
+      .getElementById("statusBig");
+
+  const name =
+    document
+      .getElementById("statusName");
+
+  const location =
+    document
+      .getElementById("statusLocation");
+
+  const reason =
+    document
+      .getElementById("statusReason");
+
+  const capacity =
+    document
+      .getElementById("statusCapacity");
+
+
+  status.style.display =
+    "block";
+
+
+  status.classList.remove(
+    "green",
+    "red",
+    "warning"
+  );
+
+
+  name.textContent =
+    result.naam || "";
+
+
+  location.textContent =
+    result.locatie
+      ? "📍 " + result.locatie +
+        "  •  🚌 " +
+        (result.bus || gekozenBus)
+      : "🚌 " +
+        (result.bus || gekozenBus);
+
+
+  if (
+    result.toegestaan
+  ) {
+
+    status.classList.add(
+      "green"
+    );
+
+
+    icon.textContent =
+      "✓";
+
+
+    big.textContent =
+      "TOEGELATEN";
+
+
+    reason.textContent =
+      "✓ OK";
+
+
+    if (
+      typeof result.gebruiktePlaatsen !==
+      "undefined"
+    ) {
+
+      capacity.textContent =
+        "👥 " +
+        result.gebruiktePlaatsen +
+        " / " +
+        result.maxPlaatsen +
+        " gescand  •  " +
+        result.vrijePlaatsen +
+        " plaatsen vrij";
+
+    }
+    else {
+
+      capacity.textContent =
+        "";
+
+    }
+
+  }
+  else {
+
+    status.classList.add(
+      "red"
+    );
+
+
+    icon.textContent =
+      "✕";
+
+
+    /*
+     * Voor BUS VOL extra duidelijk.
+     */
+
+    if (
+      result.status ===
+      "BUS VOL"
+    ) {
+
+      big.textContent =
+        "BUS VOL";
+
+    }
+    else if (
+      result.status ===
+      "AL GESCAND"
+    ) {
+
+      big.textContent =
+        "AL GESCAND VANDAAG";
+
+    }
+    else {
+
+      big.textContent =
+        "NIET TOEGELATEN";
+
+    }
+
+
+    reason.textContent =
+      result.reden ||
+      "Geen toegang";
+
+
+    if (
+      typeof result.gebruiktePlaatsen !==
+      "undefined"
+    ) {
+
+      capacity.textContent =
+        "👥 " +
+        result.gebruiktePlaatsen +
+        " / " +
+        result.maxPlaatsen +
+        " gescand  •  " +
+        result.vrijePlaatsen +
+        " plaatsen vrij";
+
+    }
+    else {
+
+      capacity.textContent =
+        "";
+
+    }
+
+  }
+
+
+  /*
+   * Resultaat staat direct onder
+   * scanner en wordt dus meteen
+   * zichtbaar.
+   */
+
+}
+
+
+/* ============================================================
+   FOUT
+   ============================================================ */
+
+function toonFout(
+  titel,
+  tekst
+) {
+
+  const status =
+    document
+      .getElementById("status");
+
+
+  status.style.display =
+    "block";
+
+
+  status.classList.remove(
+    "green",
+    "warning"
+  );
+
+  status.classList.add(
+    "red"
+  );
+
+
+  document
+    .getElementById("statusIcon")
+    .textContent =
+    "✕";
+
+
+  document
+    .getElementById("statusBig")
+    .textContent =
+    titel;
+
+
+  document
+    .getElementById("statusName")
+    .textContent =
+    "";
+
+
+  document
+    .getElementById("statusLocation")
+    .textContent =
+    "";
+
+
+  document
+    .getElementById("statusReason")
+    .textContent =
+    tekst;
+
+
+  document
+    .getElementById("statusCapacity")
+    .textContent =
+    "";
+
+}
+
+
+/* ============================================================
+   RESULTAAT VERBERGEN
+   ============================================================ */
+
+function verbergResultaat() {
+
+  document
+    .getElementById("status")
+    .style.display =
+    "none";
+
+}
+
+
+/* ============================================================
+   CAPACITEIT OPHALEN
+   ============================================================ */
+
+async function updateCapacity() {
+
+  if (
+    !chauffeurToken ||
+    !gekozenBus
+  ) {
+
+    return;
+
+  }
+
+
+  try {
+
+    const result =
+      await apiCall({
+
+        api: "1",
+
+        action: "capacity",
+
+        bus: gekozenBus,
+
+        token: chauffeurToken
+
+      });
+
+
+    if (
+      result &&
+      result.toegestaan
+    ) {
+
+      updateCapacityFromResult(
+        result
+      );
+
+    }
+
+  }
+  catch (e) {
+
+    console.log(
+      "Capaciteit kon niet worden opgehaald:",
+      e
     );
 
   }
@@ -2232,637 +2165,447 @@ async function controleerHandmatig() {
 }
 
 
-/* =========================================================
-   HANDMATIG RESULTAAT
-========================================================= */
+/* ============================================================
+   CAPACITEIT OP SCHERM ZETTEN
+   ============================================================ */
 
-function toonHandmatigResultaat(
+function updateCapacityFromResult(
   result
 ) {
 
   if (!result) {
-
-    showMessage(
-      "manualMessage",
-      "Geen antwoord van server.",
-      "error"
-    );
-
     return;
   }
 
 
-  let tekst =
-    result.status || "";
+  const max =
+    Number(
+      result.maxPlaatsen || 0
+    );
 
 
-  if (result.naam) {
-
-    tekst +=
-      " – " +
-      result.naam;
-
-  }
+  const used =
+    Number(
+      result.gebruiktePlaatsen || 0
+    );
 
 
-  if (result.locatie) {
-
-    tekst +=
-      " – " +
-      result.locatie;
-
-  }
-
-
-  if (result.reden) {
-
-    tekst +=
-      " – " +
-      result.reden;
-
-  }
+  const free =
+    Number(
+      typeof result.vrijePlaatsen !==
+      "undefined"
+        ? result.vrijePlaatsen
+        : Math.max(
+            0,
+            max - used
+          )
+    );
 
 
-  showMessage(
-    "manualMessage",
-    tekst,
-    result.toegestaan
-      ? "success"
-      : "error"
+  const percentage =
+    max > 0
+      ? Math.min(
+          100,
+          Math.round(
+            used / max * 100
+          )
+        )
+      : 0;
+
+
+  document
+    .getElementById("capacityCount")
+    .textContent =
+    used +
+    " / " +
+    max;
+
+
+  document
+    .getElementById("capacityFree")
+    .textContent =
+    free;
+
+
+  document
+    .getElementById("capacityFill")
+    .style.width =
+    percentage + "%";
+
+
+  const card =
+    document
+      .getElementById("capacityCard");
+
+
+  const status =
+    document
+      .getElementById("capacityStatus");
+
+
+  card.classList.remove(
+    "warning",
+    "full"
   );
 
 
-  toonScanResultaat(
-    result
-  );
-
-}
-
-
-/* =========================================================
-   BUS WISSELEN
-========================================================= */
-
-async function switchEmployee() {
-
-  const personeelsnummer =
-    $("switchPersonnel")
-      .value
-      .trim();
-
-  const locatie =
-    $("switchLocation")
-      .value
-      .trim();
-
-  const nieuweBus =
-    $("newBus")
-      .value;
-
-
-  if (!personeelsnummer) {
-
-    showMessage(
-      "switchMessage",
-      "Geef een personeelsnummer in.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  if (!locatie) {
-
-    showMessage(
-      "switchMessage",
-      "Kies de locatie.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  try {
-
-    const result =
-      await api("switchBus", {
-
-        personeelsnummer:
-          personeelsnummer,
-
-        locatie:
-          locatie,
-
-        nieuweBus:
-          nieuweBus,
-
-        token:
-          token
-
-      });
-
-
-    if (
-      result.status === "NIET INGELOGD"
-    ) {
-
-      sessieVerlopen();
-
-      return;
-    }
-
-
-    showMessage(
-      "switchMessage",
-
-      result.reden ||
-      result.status ||
-      "Bus gewijzigd.",
-
-      result.toegestaan
-        ? "success"
-        : "error"
-    );
-
-
-    await laadAlleCapaciteiten();
-
-  } catch (error) {
-
-    showMessage(
-      "switchMessage",
-      error.message,
-      "error"
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   ALLE MEDEWERKERS WISSELEN
-========================================================= */
-
-async function switchAllEmployees() {
-
-  const oudeBus =
-    $("oldBus").value;
-
-  const nieuweBus =
-    $("allNewBus").value;
-
-  const locatie =
-    $("allLocation").value;
-
-
-  if (oudeBus === nieuweBus) {
-
-    showMessage(
-      "switchAllMessage",
-      "Oude en nieuwe bus mogen niet hetzelfde zijn.",
-      "error"
-    );
-
-    return;
-  }
-
+  /*
+   * BUS VOL
+   */
 
   if (
-    !confirm(
-      "Ben je zeker dat je medewerkers van " +
-      oudeBus +
-      " naar " +
-      nieuweBus +
-      " wilt verplaatsen?"
+    free <= 0 ||
+    result.status ===
+    "BUS VOL"
+  ) {
+
+    card.classList.add(
+      "full"
+    );
+
+    status.textContent =
+      "🔴 BUS VOL";
+
+    document
+      .getElementById("busState")
+      .textContent =
+      "BUS VOL";
+
+    document
+      .getElementById("busState")
+      .style.background =
+      "#ffe1e1";
+
+    document
+      .getElementById("busState")
+      .style.color =
+      "#a90008";
+
+    return;
+
+  }
+
+
+  /*
+   * LAATSTE PLAATSEN
+   */
+
+  if (
+    result.status ===
+      "LAATSTE PLAATSEN" ||
+    (
+      typeof result.waarschuwingsgrens !==
+      "undefined" &&
+      free <=
+        Number(
+          result.waarschuwingsgrens
+        )
     )
   ) {
+
+    card.classList.add(
+      "warning"
+    );
+
+    status.textContent =
+      "🟠 LAATSTE " +
+      free +
+      " PLAATSEN";
+
+    document
+      .getElementById("busState")
+      .textContent =
+      "LAATSTE PLAATSEN";
+
+    document
+      .getElementById("busState")
+      .style.background =
+      "#fff1d5";
+
+    document
+      .getElementById("busState")
+      .style.color =
+      "#8a5400";
+
     return;
-  }
-
-
-  try {
-
-    const result =
-      await api("switchAll", {
-
-        oudeBus:
-          oudeBus,
-
-        nieuweBus:
-          nieuweBus,
-
-        locatie:
-          locatie,
-
-        token:
-          token
-
-      });
-
-
-    if (
-      result.status === "NIET INGELOGD"
-    ) {
-
-      sessieVerlopen();
-
-      return;
-    }
-
-
-    let tekst =
-      result.reden ||
-      result.status ||
-      "Buswijziging uitgevoerd.";
-
-
-    if (
-      result.aantal !== undefined
-    ) {
-
-      tekst +=
-        " Aantal gewijzigd: " +
-        result.aantal;
-
-    }
-
-
-    showMessage(
-      "switchAllMessage",
-      tekst,
-      result.toegestaan
-        ? "success"
-        : "error"
-    );
-
-
-    await laadAlleCapaciteiten();
-
-
-  } catch (error) {
-
-    showMessage(
-      "switchAllMessage",
-      error.message,
-      "error"
-    );
 
   }
+
+
+  /*
+   * NORMAAL
+   */
+
+  status.textContent =
+    "🟢 BUS BESCHIKBAAR";
+
+
+  document
+    .getElementById("busState")
+    .textContent =
+    "ACTIEF";
+
+
+  document
+    .getElementById("busState")
+    .style.background =
+    "#dff5e5";
+
+
+  document
+    .getElementById("busState")
+    .style.color =
+    "#08752f";
 
 }
 
 
-/* =========================================================
-   CACHE VERNIEUWEN
-========================================================= */
+/* ============================================================
+   AUTOMATISCHE CAPACITEITSUPDATE
+   ============================================================ */
 
-async function refreshCache() {
-
-  try {
-
-    const result =
-      await api(
-        "refreshCache",
-        {}
-      );
+let capacityTimer = null;
 
 
-    showMessage(
-      "systemMessage",
+function startCapacityTimer() {
 
-      result.reden ||
-      (
-        result.status +
-        (
-          result.aantal !== undefined
-            ? " – " + result.aantal + " medewerkers"
-            : ""
-        )
-      ),
+  if (capacityTimer) {
 
-      result.toegestaan
-        ? "success"
-        : "error"
-    );
-
-
-  } catch (error) {
-
-    showMessage(
-      "systemMessage",
-      error.message,
-      "error"
+    clearInterval(
+      capacityTimer
     );
 
   }
 
-}
 
+  /*
+   * Elke 5 seconden controleren.
+   */
 
-/* =========================================================
-   VERBINDING TESTEN
-========================================================= */
+  capacityTimer =
+    setInterval(
+      function() {
 
-async function testVerbinding() {
+        if (
+          chauffeurToken &&
+          gekozenBus &&
+          !scanBusy
+        ) {
 
-  if (!token) {
+          updateCapacity();
 
-    showMessage(
-      "systemMessage",
-      "Niet ingelogd.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  try {
-
-    const result =
-      await api(
-        "allCapacity",
-        {
-          token: token
         }
-      );
 
-
-    if (
-      result.status === "NIET INGELOGD"
-    ) {
-
-      sessieVerlopen();
-
-      return;
-    }
-
-
-    if (result.toegestaan) {
-
-      showMessage(
-        "systemMessage",
-        "🟢 Verbinding met buscontrole werkt.",
-        "success"
-      );
-
-    } else {
-
-      showMessage(
-        "systemMessage",
-        "🔴 Server antwoordde, maar gaf een fout.",
-        "error"
-      );
-
-    }
-
-
-  } catch (error) {
-
-    showMessage(
-      "systemMessage",
-      "🔴 Verbinding mislukt: " +
-      error.message,
-      "error"
+      },
+      5000
     );
 
-  }
-
 }
 
 
-/* =========================================================
-   SESSIE VERLOPEN
-========================================================= */
-
-function sessieVerlopen() {
-
-  token = "";
-
-  sessionStorage.removeItem(
-    SESSION_KEY
-  );
-
-  stopScanner();
-
-  $("mainScreen")
-    .classList.add("hidden");
-
-  $("loginScreen")
-    .classList.remove("hidden");
-
-  $("logoutBtn")
-    .classList.add("hidden");
-
-  $("sessionText")
-    .textContent =
-    "Sessie verlopen";
-
-
-  showMessage(
-    "loginMessage",
-    "De chauffeursessie is verlopen. Log opnieuw in.",
-    "error"
-  );
-
-}
-
-
-/* =========================================================
+/* ============================================================
    UITLOGGEN
-========================================================= */
+   ============================================================ */
 
-async function uitloggen() {
+async function logout() {
 
   try {
 
-    if (token) {
+    await stopScanner();
 
-      await api("logout", {
-        token: token
-      });
-
-    }
-
-  } catch (error) {
-    console.log(error);
   }
-
-
-  await stopScanner();
-
-
-  token = "";
-
-  sessionStorage.removeItem(
-    SESSION_KEY
-  );
-
-
-  $("mainScreen")
-    .classList.add("hidden");
-
-  $("loginScreen")
-    .classList.remove("hidden");
-
-  $("logoutBtn")
-    .classList.add("hidden");
-
-  $("sessionText")
-    .textContent =
-    "Niet ingelogd";
-
-  $("chauffeurCode")
-    .value = "";
-
-}
-
-
-/* =========================================================
-   AUTOMATISCHE CAPACITEIT UPDATE
-========================================================= */
-
-setInterval(
-  function() {
-
-    if (
-      token &&
-      selectedBus
-    ) {
-
-      laadBusCapaciteit(
-        selectedBus
-      );
-
-      laadAlleCapaciteiten();
-
-    }
-
-  },
-  30000
-);
-
-
-/* =========================================================
-   GELUID BIJ GROEN / ROOD
-========================================================= */
-
-function speelGeluid(
-  toegestaan
-) {
-
-  try {
-
-    const AudioContext =
-      window.AudioContext ||
-      window.webkitAudioContext;
-
-    if (!AudioContext) {
-      return;
-    }
-
-    const ctx =
-      new AudioContext();
-
-    const oscillator =
-      ctx.createOscillator();
-
-    const gain =
-      ctx.createGain();
-
-
-    oscillator.connect(gain);
-    gain.connect(ctx.destination);
-
-
-    oscillator.frequency.value =
-      toegestaan
-        ? 880
-        : 220;
-
-    oscillator.type =
-      "sine";
-
-
-    gain.gain.setValueAtTime(
-      0.001,
-      ctx.currentTime
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-      0.15,
-      ctx.currentTime + 0.01
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-      0.001,
-      ctx.currentTime + 0.20
-    );
-
-
-    oscillator.start();
-
-    oscillator.stop(
-      ctx.currentTime + 0.22
-    );
-
-  } catch (e) {
+  catch (e) {
 
     console.log(e);
 
   }
 
+
+  if (capacityTimer) {
+
+    clearInterval(
+      capacityTimer
+    );
+
+    capacityTimer =
+      null;
+
+  }
+
+
+  chauffeurToken =
+    "";
+
+  gekozenBus =
+    "";
+
+
+  localStorage.removeItem(
+    "chauffeurToken"
+  );
+
+  localStorage.removeItem(
+    "gekozenBus"
+  );
+
+
+  document
+    .getElementById("scannerPage")
+    .style.display =
+    "none";
+
+
+  document
+    .getElementById("loginPage")
+    .style.display =
+    "block";
+
+
+  document
+    .getElementById("code")
+    .value =
+    "";
+
+
+  document
+    .getElementById("bus")
+    .value =
+    "";
+
+
+  verbergResultaat();
+
+
+  document
+    .getElementById("capacityCount")
+    .textContent =
+    "0 / 0";
+
+
+  document
+    .getElementById("capacityFree")
+    .textContent =
+    "0";
+
+
+  document
+    .getElementById("capacityStatus")
+    .textContent =
+    "Capaciteit laden...";
+
 }
 
 
-/* =========================================================
-   PATCH GELUID AAN RESULTAAT
-========================================================= */
+/* ============================================================
+   ENTER = INLOGGEN
+   ============================================================ */
 
-const origineleToonScanResultaat =
-  toonScanResultaat;
+document
+  .getElementById("code")
+  .addEventListener(
+    "keydown",
+    function(event) {
 
-toonScanResultaat =
-  function(result) {
+      if (
+        event.key ===
+        "Enter"
+      ) {
 
-    origineleToonScanResultaat(
-      result
+        login();
+
+      }
+
+    }
+  );
+
+
+/* ============================================================
+   BIJ OPENEN
+   ============================================================ */
+
+window.addEventListener(
+  "load",
+  function() {
+
+    /*
+     * Geen automatische login.
+     * Chauffeur moet opnieuw aanmelden.
+     */
+
+    localStorage.removeItem(
+      "chauffeurToken"
     );
 
-    speelGeluid(
-      !!(
-        result &&
-        result.toegestaan
-      )
+    localStorage.removeItem(
+      "gekozenBus"
     );
 
-  };
+
+    document
+      .getElementById("stopButton")
+      .disabled =
+      true;
+
+  }
+);
 
 
-/* =========================================================
-   AUTOMATISCHE BUSLABEL UPDATE
-========================================================= */
+/* ============================================================
+   CAPACITY TIMER STARTEN NA LOGIN
+   ============================================================ */
+
+/*
+ * We starten de timer zodra de
+ * scannerpagina zichtbaar wordt.
+ */
+
+const origineleStartScanner =
+  startScanner;
+
+
+/*
+ * Geen extra wrapper nodig:
+ * timer wordt hieronder gestart
+ * vanuit een korte interval die
+ * controleert of chauffeur is ingelogd.
+ */
 
 setInterval(
   function() {
 
     if (
-      token &&
-      selectedBus
+      chauffeurToken &&
+      gekozenBus &&
+      !capacityTimer
     ) {
 
-      laadBusCapaciteit(
-        selectedBus
-      );
+      startCapacityTimer();
 
     }
 
   },
-  10000
+  1000
 );
+
+
+/* ============================================================
+   SLEEP
+   ============================================================ */
+
+function sleep(ms) {
+
+  return new Promise(
+    function(resolve) {
+
+      setTimeout(
+        resolve,
+        ms
+      );
+
+    }
+  );
+
+}
 
 </script>
 
