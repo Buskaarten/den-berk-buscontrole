@@ -817,108 +817,83 @@ function speelRoodGeluid() {
 
 function apiCall(params) {
 
-  return new Promise(
-    function(resolve, reject) {
+  return new Promise(function(resolve, reject) {
 
-      const callbackName =
-        "callback_" +
-        Date.now() +
-        "_" +
-        Math.floor(
-          Math.random() * 100000
-        );
+    const callbackName =
+      "denBerkCallback_" +
+      Date.now() +
+      "_" +
+      Math.floor(Math.random() * 1000000);
 
+    const script = document.createElement("script");
 
-      const script =
-        document.createElement(
-          "script"
-        );
+    const query = new URLSearchParams(params);
 
+    query.set("callback", callbackName);
 
-      const query =
-        new URLSearchParams(
-          params
-        );
+    let klaar = false;
 
+    function opruimen() {
 
-      query.set(
-        "callback",
-        callbackName
-      );
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
 
-
-      script.src =
-        API_URL +
-        "?" +
-        query.toString();
-
-
-      window[callbackName] =
-        function(data) {
-
-          try {
-
-            resolve(data);
-
-          }
-
-          finally {
-
-            delete window[
-              callbackName
-            ];
-
-
-            if (
-              script.parentNode
-            ) {
-
-              script.parentNode.removeChild(
-                script
-              );
-
-            }
-
-          }
-
-        };
-
-
-      script.onerror =
-        function() {
-
-          delete window[
-            callbackName
-          ];
-
-
-          if (
-            script.parentNode
-          ) {
-
-            script.parentNode.removeChild(
-              script
-            );
-
-          }
-
-
-          reject(
-            new Error(
-              "API verbinding mislukt."
-            )
-          );
-
-        };
-
-
-      document.body.appendChild(
-        script
-      );
-
+      try {
+        delete window[callbackName];
+      } catch (e) {
+        window[callbackName] = undefined;
+      }
     }
-  );
 
+    window[callbackName] = function(data) {
+
+      if (klaar) return;
+
+      klaar = true;
+
+      opruimen();
+
+      resolve(data);
+    };
+
+    script.src =
+      API_URL +
+      "?" +
+      query.toString();
+
+    script.async = true;
+
+    script.onerror = function() {
+
+      if (klaar) return;
+
+      klaar = true;
+
+      opruimen();
+
+      reject(
+        new Error("API verbinding mislukt.")
+      );
+    };
+
+    document.body.appendChild(script);
+
+    setTimeout(function() {
+
+      if (klaar) return;
+
+      klaar = true;
+
+      opruimen();
+
+      reject(
+        new Error("API timeout.")
+      );
+
+    }, 15000);
+
+  });
 }
 
 
