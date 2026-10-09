@@ -814,86 +814,116 @@ function speelRoodGeluid() {
 /* =========================================================
    API CALL
    ========================================================= */
-
 function apiCall(params) {
 
   return new Promise(function(resolve, reject) {
 
-    const callbackName =
-      "denBerkCallback_" +
-      Date.now() +
-      "_" +
-      Math.floor(Math.random() * 1000000);
+    let poging = 0;
+    const maximaal = 3;
 
-    const script = document.createElement("script");
+    function probeer() {
 
-    const query = new URLSearchParams(params);
+      poging++;
 
-    query.set("callback", callbackName);
+      const callbackName =
+        "denBerkCallback_" +
+        Date.now() +
+        "_" +
+        Math.floor(Math.random() * 1000000);
 
-    let klaar = false;
+      const script = document.createElement("script");
 
-    function opruimen() {
+      const query = new URLSearchParams(params);
 
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
+      query.set("callback", callbackName);
+
+      let klaar = false;
+
+      function opruimen() {
+
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
+
+        try {
+          delete window[callbackName];
+        } catch (e) {
+          window[callbackName] = undefined;
+        }
       }
 
-      try {
-        delete window[callbackName];
-      } catch (e) {
-        window[callbackName] = undefined;
+      function opnieuwProberen(fout) {
+
+        if (klaar) return;
+
+        klaar = true;
+
+        opruimen();
+
+        if (poging < maximaal) {
+
+          const wachttijd =
+            poging === 1 ? 800 : 1600;
+
+          setTimeout(function() {
+            probeer();
+          }, wachttijd);
+
+        } else {
+
+          reject(fout);
+
+        }
       }
+
+      window[callbackName] = function(data) {
+
+        if (klaar) return;
+
+        klaar = true;
+
+        opruimen();
+
+        resolve(data);
+      };
+
+      script.src =
+        API_URL +
+        "?" +
+        query.toString();
+
+      script.async = true;
+
+      script.onerror = function() {
+
+        opnieuwProberen(
+          new Error(
+            "Verbinding met de buscontrole mislukt."
+          )
+        );
+
+      };
+
+      document.body.appendChild(script);
+
+      setTimeout(function() {
+
+        if (klaar) return;
+
+        opnieuwProberen(
+          new Error(
+            "API timeout."
+          )
+        );
+
+      }, 10000);
+
     }
 
-    window[callbackName] = function(data) {
-
-      if (klaar) return;
-
-      klaar = true;
-
-      opruimen();
-
-      resolve(data);
-    };
-
-    script.src =
-      API_URL +
-      "?" +
-      query.toString();
-
-    script.async = true;
-
-    script.onerror = function() {
-
-      if (klaar) return;
-
-      klaar = true;
-
-      opruimen();
-
-      reject(
-        new Error("API verbinding mislukt.")
-      );
-    };
-
-    document.body.appendChild(script);
-
-    setTimeout(function() {
-
-      if (klaar) return;
-
-      klaar = true;
-
-      opruimen();
-
-      reject(
-        new Error("API timeout.")
-      );
-
-    }, 15000);
+    probeer();
 
   });
+
 }
 
 
