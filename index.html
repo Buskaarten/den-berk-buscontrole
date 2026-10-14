@@ -692,10 +692,6 @@ function speelRoodGeluid() {
       audioContext.currentTime;
 
 
-    /*
-     * Eerste piep
-     */
-
     const osc1 =
       audioContext.createOscillator();
 
@@ -738,10 +734,6 @@ function speelRoodGeluid() {
       now + 0.29
     );
 
-
-    /*
-     * Tweede piep
-     */
 
     const osc2 =
       audioContext.createOscillator();
@@ -814,6 +806,7 @@ function speelRoodGeluid() {
 /* =========================================================
    API CALL
    ========================================================= */
+
 function apiCall(params) {
 
   return new Promise(function(resolve, reject) {
@@ -898,12 +891,11 @@ function apiCall(params) {
     /*
      * GEEN AUTOMATISCHE RETRY.
      *
-     * Dit is belangrijk voor de buscontrole.
-     * De server kan een scan al verwerkt hebben,
-     * terwijl het antwoord nog onderweg is.
-     *
-     * Een nieuwe poging zou dan kunnen eindigen
-     * met "Al gescand vandaag".
+     * Vooral bij action=scan is een retry gevaarlijk:
+     * de eerste aanvraag kan op Google Sheets al verwerkt
+     * zijn terwijl het antwoord te laat terugkomt.
+     * Een retry zou dan ten onrechte "Al gescand vandaag"
+     * kunnen geven.
      */
 
     const timeout =
@@ -936,10 +928,6 @@ function apiCall(params) {
 
 }
 
-
-/* =========================================================
-   LOGIN
-   ========================================================= */
 
 /* =========================================================
    LOGIN
@@ -1513,27 +1501,37 @@ async function onScanSuccess(
   decodedText
 ) {
 
+  /*
+   * BELANGRIJK:
+   * De scanner wordt onmiddellijk geblokkeerd.
+   * Dit gebeurt VOORDAT de QR-code naar de server gaat.
+   */
+
+  if (scanBusy) {
+    return;
+  }
+
+  scanBusy = true;
+
   const badgeId =
     String(
       decodedText || ""
     ).trim();
 
-
   if (!badgeId) {
+
+    scanBusy = false;
 
     return;
 
   }
 
-
   /*
-   * Dezelfde QR niet onmiddellijk
-   * opnieuw verwerken.
+   * Extra beveiliging tegen dezelfde QR-code.
    */
 
   const nu =
     Date.now();
-
 
   if (
     badgeId ===
@@ -1545,37 +1543,17 @@ async function onScanSuccess(
       SCAN_BLOKKADE_MS
   ) {
 
+    scanBusy = false;
+
     return;
 
   }
-
 
   laatsteGesandeBadge =
     badgeId;
 
-
   laatsteScanTijd =
     nu;
-
-
-  /*
-   * Voorkom dat twee scans
-   * tegelijkertijd naar de
-   * server gaan.
-   */
-
-  if (
-    scanBusy
-  ) {
-
-    return;
-
-  }
-
-
-  scanBusy =
-    true;
-
 
   document
     .getElementById(
@@ -1584,6 +1562,12 @@ async function onScanSuccess(
     .style.display =
     "block";
 
+  document
+    .getElementById(
+      "scannerMessage"
+    )
+    .textContent =
+    "QR-code gelezen – controleren...";
 
   try {
 
@@ -1602,15 +1586,9 @@ async function onScanSuccess(
 
       });
 
-
     toonResultaat(
       result
     );
-
-
-    /*
-     * Geluid
-     */
 
     if (
       result &&
@@ -1620,17 +1598,14 @@ async function onScanSuccess(
       speelGroenGeluid();
 
     }
-
     else {
 
       speelRoodGeluid();
 
     }
 
-
     /*
-     * Capaciteit direct bijwerken
-     * als de backend deze terugstuurt.
+     * Capaciteit direct bijwerken.
      */
 
     if (
@@ -1644,21 +1619,11 @@ async function onScanSuccess(
       );
 
     }
-
     else {
 
       await updateCapacity();
 
     }
-
-
-    /*
-     * Extra servercontrole na
-     * een succesvolle groene scan.
-     *
-     * Hierdoor blijft de teller
-     * gelijk aan Google Sheets.
-     */
 
     if (
       result &&
@@ -1672,19 +1637,35 @@ async function onScanSuccess(
 
     }
 
-
     /*
      * Resultaat 3 seconden zichtbaar.
+     *
+     * De scanner blijft gedurende deze volledige periode
+     * GEBLOKKEERD. Pas daarna kan een volgende QR-code
+     * worden gelezen.
      */
 
     clearTimeout(
       resultTimer
     );
 
-
     resultTimer =
       setTimeout(
-        verbergResultaat,
+        function() {
+
+          verbergResultaat();
+
+          scanBusy =
+            false;
+
+          document
+            .getElementById(
+              "scannerMessage"
+            )
+            .textContent =
+            "Richt de camera op de QR-code.";
+
+        },
         3000
       );
 
@@ -1696,24 +1677,34 @@ async function onScanSuccess(
       error
     );
 
-
     toonFout(
       "VERBINDINGSPROBLEEM",
       "Controle kon niet worden uitgevoerd."
     );
 
-
     speelRoodGeluid();
-
 
     clearTimeout(
       resultTimer
     );
 
-
     resultTimer =
       setTimeout(
-        verbergResultaat,
+        function() {
+
+          verbergResultaat();
+
+          scanBusy =
+            false;
+
+          document
+            .getElementById(
+              "scannerMessage"
+            )
+            .textContent =
+            "Richt de camera op de QR-code.";
+
+        },
         3000
       );
 
@@ -1727,14 +1718,6 @@ async function onScanSuccess(
       )
       .style.display =
       "none";
-
-
-    /*
-     * Scanner blijft actief.
-     */
-
-    scanBusy =
-      false;
 
   }
 
