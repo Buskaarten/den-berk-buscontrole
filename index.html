@@ -818,85 +818,74 @@ function apiCall(params) {
 
   return new Promise(function(resolve, reject) {
 
-    let poging = 0;
-    const maximaal = 3;
+    const callbackName =
+      "denBerkCallback_" +
+      Date.now() +
+      "_" +
+      Math.floor(Math.random() * 1000000);
 
-    function probeer() {
+    const script =
+      document.createElement("script");
 
-      poging++;
+    const query =
+      new URLSearchParams(params);
 
-      const callbackName =
-        "denBerkCallback_" +
-        Date.now() +
-        "_" +
-        Math.floor(Math.random() * 1000000);
+    query.set(
+      "callback",
+      callbackName
+    );
 
-      const script = document.createElement("script");
+    let klaar = false;
 
-      const query = new URLSearchParams(params);
+    function opruimen() {
 
-      query.set("callback", callbackName);
-
-      let klaar = false;
-
-      function opruimen() {
-
-        if (script.parentNode) {
-          script.parentNode.removeChild(script);
-        }
-
-        try {
-          delete window[callbackName];
-        } catch (e) {
-          window[callbackName] = undefined;
-        }
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
       }
 
-      function opnieuwProberen(fout) {
-
-        if (klaar) return;
-
-        klaar = true;
-
-        opruimen();
-
-        if (poging < maximaal) {
-
-          const wachttijd =
-            poging === 1 ? 800 : 1600;
-
-          setTimeout(function() {
-            probeer();
-          }, wachttijd);
-
-        } else {
-
-          reject(fout);
-
-        }
+      try {
+        delete window[callbackName];
+      }
+      catch (e) {
+        window[callbackName] = undefined;
       }
 
-      window[callbackName] = function(data) {
+    }
 
-        if (klaar) return;
+    window[callbackName] =
+      function(data) {
+
+        if (klaar) {
+          return;
+        }
 
         klaar = true;
 
         opruimen();
 
         resolve(data);
+
       };
 
-      script.src =
-        API_URL +
-        "?" +
-        query.toString();
+    script.src =
+      API_URL +
+      "?" +
+      query.toString();
 
-      script.async = true;
+    script.async = true;
 
-      script.onerror = function() {
+    script.onerror =
+      function() {
 
-        opnieuwProberen(
+        if (klaar) {
+          return;
+        }
+
+        klaar = true;
+
+        opruimen();
+
+        reject(
           new Error(
             "Verbinding met de buscontrole mislukt."
           )
@@ -904,28 +893,53 @@ function apiCall(params) {
 
       };
 
-      document.body.appendChild(script);
+    document.body.appendChild(script);
 
-      setTimeout(function() {
+    /*
+     * GEEN AUTOMATISCHE RETRY.
+     *
+     * Dit is belangrijk voor de buscontrole.
+     * De server kan een scan al verwerkt hebben,
+     * terwijl het antwoord nog onderweg is.
+     *
+     * Een nieuwe poging zou dan kunnen eindigen
+     * met "Al gescand vandaag".
+     */
 
-        if (klaar) return;
+    const timeout =
+      params.action === "scan"
+        ? 15000
+        : 10000;
 
-        opnieuwProberen(
+    setTimeout(
+      function() {
+
+        if (klaar) {
+          return;
+        }
+
+        klaar = true;
+
+        opruimen();
+
+        reject(
           new Error(
             "API timeout."
           )
         );
 
-      }, 10000);
-
-    }
-
-    probeer();
+      },
+      timeout
+    );
 
   });
 
 }
 
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
 
 /* =========================================================
    LOGIN
